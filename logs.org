@@ -1,0 +1,104 @@
+#+TITLE: Logs
+* RSTHD vs THE-1
+** RSTHD with Mod-Tap Shift
+I have given two mappings a try so far, RSTHD and THE-1. I started with a slightly modded RSTHD where I swapped =z= and =j= so that I satisfied my vim needs. I practiced this layout with mod tap shift on the index fingers for a week and got up to 30wpm (yay!). But I quickly found myself stumbling with the mod tap shift, especially on =the= since it's just /so fast/ on RSTHD. Even after trying all the mod tap tweaking, I never could get =The= consistently. And since one of the main reasons I got the Kyria was to make things more consistent, this really bothered me. So I decided one shots might be the route for me, and shopped around for another layout I could try.
+** THE-1 with One Shot Shift
+So I came upon THE-1, which took a little more work to get my =j= and =k= in places I liked, but here's what I came up with:
+#+BEGIN_SRC C
+/*
+ * ,-------------------------------------------.                              ,-------------------------------------------.
+ * |  Tab   |   Z  |   M  |   L  |   U  | .  > |                              |   V  |   D  |   R  | '  " |   Q  | \  |   |
+ * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
+ * |Esc/NAV |   A  |   T  |   H  |   E  |   X  |                              |   C  |   S  |   N  |   O  |   I  | ;  :   |
+ * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
+ * | LShift | /  ? |   P  |   F  |   K  | ,  < |Leader|      |  |      |Leader|   G  |   J  |   W  |   B  |   Y  | -  _   |
+ * `----------------------+------+------+------+------+ Enter|  | Bksp +------+------+------+------+----------------------'
+ *                        | ???  | GUI  | Esc  | OSM  | NUM  |  | SYM  | Space| Tab  | GUI  | ???  |
+ *                        |      |      | Alt  | Shift|      |  |      | NAV  | Ctrl |      |      |
+ *                        `----------------------------------'  `----------------------------------'
+ */
+#+END_SRC
+I got up to 30wpm in about a week (thought it felt tougher mostly because it's so similar to RSTHD and I kept getting keys mixed). There's a few things I really like about this layout, =j= and =k= are in what I see as the perfect compromise, very comfy when the fingers are relaxed without bringing /too/ much inefficiency to the layout. I was also a big fan of the one shot shift of the thumb, it was a bit weird to get used to at first since you tap a key and nothing happens, which is surprisingly confusing, but it quickly became very natural and felt so much less finicky than mod-tap or even regular old shift. That being said, THE-1 has a few more same finger bigrams that RSTHD from the get go, and I added more with =ke=, =ex=, and =bo=. Note that I also tried =j= and =k= swapped, but the =ju=, =ck= bigrams bothered me a lot since they were bigger / more awkward. That being said, I don't think THE-1 is quite as optimized as RSTHD, =e= and =s= on index fingers makes it really hard to avoid same finger bigrams, and while putting comma and dot on the index seems like a decent work around, it turns out =e= is the most common final letter so really you still get same finger bigrams :/.
+* Back to RSTHD?
+In the end these same finger bigrams are annoying me too much to be sure it's /the one/ for me ;). And I really did like the feel of RSTHD, so I've come up with a slightly bigger mod to RSTHD that takes all the things I liked from my THE-1 layout, and tries to get them into RSTHD.
+#+BEGIN_SRC C
+/*
+ * ,-------------------------------------------.                              ,-------------------------------------------.
+ * |  Tab   |   Z  |   C  |   Y  |   F  |   P  |                              |   X  |   L  | ,  < |   U  |   Q  |  | \   |
+ * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
+ * |Esc/NAV |   R  |   S  |   T  |   H  |   D  |                              |   M  |   N  |   A  |   I  |   O  |  ' "   |
+ * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
+ * |  /  ?  |  OSS |   W  |   G  |   K  |   B  |Leader|      |  |      |Leader|   V  |   J  | .  > | ;  : |  OSS |  -  _  |
+ * `----------------------+------+------+------+------+ Enter|  | Bksp +------+------+------+------+----------------------'
+ *                        | ???  | GUI  | Esc  |  E   | SYM  |  | NUM  | Space| Tab  | GUI  | ???  |
+ *                        |      |      | Alt  |      |      |  |      | NAV  | Ctrl |      |      |
+ *                        `----------------------------------'  `----------------------------------'
+*/
+#+END_SRC
+Note that I moved =w= and =v= since I frequently type =wl= when moving between splits/windows in vim/emacs. And looking at the [[http://norvig.com/mayzner.html][Norvig]] data it looks like I can do this with little penalty.
+I don't think I'll like the one shot shifts on the pinkie quite as much as the thumb, but considering how much more frequent =e= is than shift, it seems like it might be worth it.
+* RSTHD it is
+The one shot shift pinkies are working well enough for me so far, and the lower same finger usage is feels nicer thus far. I think this layout strikes a nice balance between what I desired for vim compatibility. That being said I have a few more tweaks I'd like to make. I find that =l= isn't super comfortable to type in resting position (ie not actively typing just navigating in vim), so I've decided to swap =l= and =m=.
+#+BEGIN_SRC C
+/*
+ * ,-------------------------------------------.                              ,-------------------------------------------.
+ * |  Tab   |   Z  |   C  |   Y  |   F  |   P  |                              |   V  |   M  | ,  < |   U  |   Q  |  | \   |
+ * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
+ * |  /  ?  |   R  |   S  |   T  |   H  |   D  |                              |   L  |   N  |   A  |   I  |   O  |  ' "   |
+ * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
+ * |  /  ?  |  OSS |   W  |   G  |   K  |   B  |Leader|      |  |      |Leader|   X  |   J  | .  > | ;  : |  OSS |  -  _  |
+ * `----------------------+------+------+------+------+ Enter|  | Bksp +------+------+------+------+----------------------'
+ *                        | ???  | GUI  | Esc  |  E   | SYM  |  | NUM  | Space| Tab  | GUI  | ???  |
+ *                        |      |      | Alt  |      |      |  |      | NAV  | Ctrl |      |      |
+ *                        `----------------------------------'  `----------------------------------'
+*/
+#+END_SRC
+I've also added homerow mods which I use for just about everything except full typing.
+
+My only remaining issue is the placement of ='= as it's on the opposite side of the left hand from two very common =l= and =v= conjuctions, this makes writing =I'll= and =I've= quite awkward, even for someone with large hands like me.
+THE-1 mentions to keep in mind that these are the english apostrophe combinations ={ n I e t y u } ' { t d l s v r }=.
+
+So I've decided, for better or worse, that I'm changing up my whole symbol config on that side...
+#+BEGIN_SRC C
+/*
+ * ,-------------------------------------------.                              ,-------------------------------------------.
+ * |  Tab   |   Z  |   C  |   Y  |   F  |   P  |                              |   V  |   M  | '  " |   U  |   Q  |  | \   |
+ * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
+ * |  /  ?  |   R  |   S  |   T  |   H  |   D  |                              |   L  |   N  |   A  |   I  |   O  |  ; :   |
+ * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
+ * |  CAPS  |  OSS |   W  |   G  |   K  |   B  |Leader|      |  |      |Leader|   X  |   J  | ,  < | .  > |  OSS |  -  _  |
+ * `----------------------+------+------+------+------+ Enter|  | Bksp +------+------+------+------+----------------------'
+ *                        | ???  | GUI  | Esc  |  E   | SYM  |  | SYM  | Space| Tab  | GUI  | ???  |
+ *                        |      |      | Alt  |  NAV |      |  |      | NUM  | Ctrl |      |      |
+ *                        `----------------------------------'  `----------------------------------'
+*/
+#+END_SRC
+Interestingly =,= and =.= are back in their QWERTY positions! I think the new placement makes a lot of sense when I look at it, so hopefully it checks out in practice.
+
+*Update*: it definitely checks out in practice the rolls are really quite nice with ='=, not sure why it isn't in the default RSTHD...
+* Swapping space and e
+Oh boy, this is a fun one...
+
+So I had started to notice difficulties in typing =there= and =these=, the trouble being that you get this strange /"rocking"/ motion with the thumb and the pinkie or ring fingers respectively.
+Essentially it's actually quite difficult to quickly alternate between the thumb and a finger, especially the weaker ones. This discussion actually arose in the SplitKB discord and a user there @johnm, mentioned that he had completely swapped the two halves of RSTHD, to avoid this problem.
+
+On top of this, I was getting annoyed with space as the layertap for the number layer, since I often found myself having to tap space in the middle of number typing. But since I want my navigation layer to be opposite of my right hand (since arrows are on my right), I've been constricted to using =e= for the navigation layer tap.
+
+So, I realized I might solve two problems if I simply swapped =e= and =space=. But boy was that a daunting choice since they are literally the two most used keys. While I was at it I wanted to address the uncomfortable placement of =v= so I decided to shuffle around =x=, =w=, and =v=.
+
+#+begin_src C
+/*
+ * ,-------------------------------------------.                              ,-------------------------------------------.
+ * |  Tab   |   Z  |   C  |   Y  |   F  |   P  |                              |   X  |   M  | '  " |   U  |   Q  |  | \   |
+ * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
+ * |  /  ?  |   R  |   S  |   T  |   H  |   D  |                              |   L  |   N  |   A  |   I  |   O  |  ; :   |
+ * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
+ * |  CAPS  |  OSS |   V  |   G  |   K  |   B  |Leader|      |  |      |Leader|   W  |   J  | ,  < | .  > |  OSS |  -  _  |
+ * `----------------------+------+------+------+------+ Enter|  | Bksp +------+------+------+------+----------------------'
+ *                        | ???  | GUI  | Esc  | Space| SYM  |  | SYM  |  E   | Tab  | GUI  | ???  |
+ *                        |      |      |      |  NAV |      |  |      | NUM  | FUN  |      |      |
+ *                        `----------------------------------'  `----------------------------------'
+ */
+#+end_src
+
+As it turns out, this didn't actually take /that/ long to adjust to. Relearning =space= and =e= was actually surprisingly fast. I'm guessing this is because they are used so frequently, especially since the =w= and =v= swap is taking much longer to adjust to.

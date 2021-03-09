@@ -1,0 +1,6 @@
+#+TITLE: Kyria Keymap
+
+** About
+This is my QMK Kyria keymap, it has some nifty features and an interesting base layer.
+
+I've been sort of tracking my decisions regarding the base layer in [[./logs.org]]

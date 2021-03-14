@@ -47,10 +47,12 @@
 #define TAPPING_TERM 200
 #define IGNORE_MOD_TAP_INTERRUPT
 #define TAPPING_FORCE_HOLD
+#define PERMISSIVE_HOLD
 
+// One shot timeout
 #define ONESHOT_TIMEOUT 400
 
-/* Default all the mods to be one shot */
+// Old key binds to cleanup my non-RSTHD maps
 #define MY_ESC LT(_NAV, KC_ESC)
 #define MY_BSPC LT(_SYM, KC_BSPC)
 #define MY_ENT LT(_NUM, KC_ENT)
@@ -61,6 +63,7 @@
 #define MY_RCTL MT(MOD_RCTL, KC_TAB)
 #define MY_LALT MT(MOD_LALT, KC_ESC)
 
-/* Define some simple vi motions */
+// Define some simple vi keys
 #define VI_B   LCTL(KC_LEFT)
 #define VI_W   LCTL(KC_RIGHT)
+#define VI_U   LCTL(KC_Z)

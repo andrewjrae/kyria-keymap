@@ -15,6 +15,7 @@
  */
 #include QMK_KEYBOARD_H
 #include <string.h>
+#include "capsword.h"
 
 #ifdef MY_SPLIT_RIGHT
 #endif
@@ -234,73 +235,23 @@ LT(_NAV,KC_SLSH), KC_R,    KC_S, KC_T, KC_H, KC_D,                              
 #ifndef MY_SPLIT_RIGHT
 
 /* --------------- PROCESS RECORD --------------- */
-static bool caps_word_on = false;
-
-void caps_word_enable(void) {
-    caps_word_on = true;
-}
-
-void caps_word_disable(void) {
-    caps_word_on = false;
-    unregister_mods(MOD_LSFT);
-}
-
-void caps_word_process_user(uint16_t keycode, const keyrecord_t *record) {
-    // Update caps word state
-    if (caps_word_on) {
-        // Get the base keycode of a mod or layer tap key
-        switch (keycode) {
-            case QK_MOD_TAP ... QK_MOD_TAP_MAX:
-            case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:
-                // Earlier return if this has not been considered tapped yet
-                if (record->tap.count == 0)
-                    return;
-                keycode = keycode & 0xFF;
-                break;
-            default:
-                break;
-        }
-
-        switch (keycode) {
-            // Keycodes to shift
-            case KC_A ... KC_Z:
-                if (record->event.pressed)
-                    register_mods(MOD_LSFT);
-                else if (!record->tap.interrupted)
-                    unregister_mods(MOD_LSFT);
-            // Keycodes to ignore (don't disable caps word), but not to shift
-            case KC_1 ... KC_0:
-            case KC_MINS:
-            case KC_BSPC:
-            case KC_UNDS: // note, this is superfluous
-            case CAPSWRD:
-                // If mod chording disable the mods
-                if (record->event.pressed && (get_mods() != MOD_LSFT) && (get_mods() != 0)) {
-                    caps_word_disable();
-                }
-                break;
-            default:
-                if (record->event.pressed)
-                    caps_word_disable();
-                break;
-        }
-    }
-}
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // Process caps word for updates
-    caps_word_process_user(keycode, record);
+    if (!process_caps_word(keycode, record)) {
+        return false;
+    }
 
     // Regular user keycode case statement
     switch (keycode) {
         case CAPSWRD:
             if (record->event.pressed) {
-                caps_word_enable();
+                enable_caps_word();
             }
             return false;
         case KC_MINS:
             // Turn the cheeky corner minus sign into an underscore when using caps word
-            if (caps_word_on && record->event.pressed && record->event.key.col == MATRIX_COLS-1) {
+            if (caps_word_enabled() && record->event.pressed && record->event.key.col == MATRIX_COLS-1) {
                 tap_code16(KC_UNDS);
                 return false;
             }
@@ -359,7 +310,7 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
             break;
         case XL_COMBO:
             if (pressed) {
-                caps_word_enable(); // toggle caps word
+                enable_caps_word(); // toggle caps word
             }
             break;
     }

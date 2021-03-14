@@ -34,6 +34,9 @@
 // Enable eeprom hand definitions
 #define EE_HANDS
 
+// Defines whether caps word uses shift or caps lock
+/* #define CAPSWORD_USE_SHIFT */
+
 // Leader key settings
 #define LEADER_SEQ_ESC KC_ESC
 #define LEADER_TIMEOUT 200

@@ -11,6 +11,8 @@ GRAVE_ESC_ENABLE = no
 ENCODER_ENABLE = no       # Enables the use of one or more encoders
 RGBLIGHT_ENABLE = no      # Enable keyboard RGB underglow
 
+SRC += capsword.c
+
 # If flashing the right side
 RIGHT = 0
 ifeq ($(RIGHT), 1)

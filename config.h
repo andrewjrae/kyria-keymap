@@ -44,7 +44,7 @@
 
 // Combo settings
 #define COMBO_COUNT 4
-#define COMBO_TERM 50
+#define COMBO_TERM 100
 
 // Tapping settings
 #define TAPPING_TERM 200

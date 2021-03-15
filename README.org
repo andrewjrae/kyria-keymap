@@ -1,3 +1,4 @@
+#+OPTIONS: ^:nil
 * Kyria Keymap
 ** About
 This is my QMK Kyria keymap, it has some nifty features and an interesting base layer.
@@ -7,7 +8,7 @@ To understand my thought process you can read my [[./logs.org][Keymap Logs]].
 
 ** Features
 *** Case Modes
-Case modes is a feature that implements different case handling modes, [[#caps-word][Caps Word]], and [[#x-case][X-Case]]. See [[./casemodes.c][casemodes.c]] for implementation details.
+Case modes is a feature that implements different case handling modes, [[caps-word][Caps Word]], and [[x-case][X-Case]]. See [[./casemodes.c][casemodes.c]] for implementation details.
 
 Also I'd like to shout out the [[https://splitkb.com][splitkb.com]] discord users for all their input and ideas with this feature.
 
@@ -19,6 +20,8 @@ What defines a "word" is sort of up for debate, I started out just checking to s
 So now I detect whether ~space~, ~backspace~, ~-~, ~_~, or an alphanumeric is hit, if so we stay in caps word state, if not, it gets disabled. I also check for mod chording with these keys and if you are chording, it will also disable caps word (e.g. on ~Ctrl+S~).
 
 The actual behavior of when to disable caps word can be tweaked using =terminate_case_mode()=.
+
+By default caps lock is used as the underlying capitalization method, however you can also choose to individually each keycode as the go out. This is useful for people who have changed the functionality of caps lock at the OS level. To do this simply add =#define CAPSWORD_USE_SHIFT= in you config.h.
 
 To use this feature =enable_caps_word()= or =toggle_caps_word()= can be called from a macro, combo, tap dance, or whatever else you can think of.
 
@@ -33,11 +36,93 @@ The idea of x-case is to make it easy to achieve these kinds of case modes. For 
 
 So you might ask, what about camelCase? Well, we got that covered too! If you call =enable_xcase_with(OSM(MOD_LSFT))=, your spaces will be turned into one shot shifts enabling you to write camelCase.
 
-Finally, because you might want to use this for some more obscure use cases, theirs the =enable_xcase()= function.
+Finally, because you might want to use this for some more obscure use cases, there's the =enable_xcase()= function.
 This function will intercept your next keystroke and use that as it's case delimiter.
 For example, calling =enable_xcase()= and then hitting your ~/~ key will result in your spaces begin turned into slashes. (This is the equivalent of calling =enable_xcase_with(KC_SLSH))=)
 
 Note that =terminate_case_mode()= also determines the stop conditions for x-case, however the spaces (and their new values) will not be passed through the terminate function.
 
-**** TODO Configuration / Usage
--
+It should also not that if you want some thing like SCREAMING_SNAKE_CASE, you just have to enable caps word and xcase (in either order).
+
+**** Configuration / Usage
+- Add [[./casemodes.c][casemodes.c]] to your ~SRCS~ by calling adding ~SRC += casemodes.c~ to your rules.mk.
+- Add =process_case_modes()= to your =process_record_user()=, it can either go at the top or the bottom, it depends on how you want it to interact with your keycodes.
+
+  If you process at the beginning it will look something like this, make sure that you return false when =process_case_modes= returns false.
+  #+begin_src C
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    // Process case modes
+    if (!process_case_modes(keycode, record)) {
+        return false;
+    }
+    ...
+  #+end_src
+
+- Add ways to enable the modes in your keymap.c, for example you could use custom keycodes (macros):
+
+  Remember to always start your custom keycodes at =SAFE_RANGE=.
+#+begin_src C
+enum custom_keycodes {
+    CAPSWORD = SAFE_RANGE,
+    SNAKECASE,
+};
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    // Process case modes
+    if (!process_case_modes(keycode, record)) {
+        return false;
+    }
+
+    // Regular user keycode case statement
+    switch (keycode) {
+        case CAPSWORD:
+            if (record->event.pressed) {
+                enable_caps_word();
+            }
+            return false;
+        case SNAKECASE:
+            if (record->event.pressed) {
+                enable_xcase_with(KC_UNDS);
+            }
+            return false;
+        default:
+            return true;
+    }
+}
+#+end_src
+
+- Change the mode termination conditions by creating a custom =terminate_case_mode()= function in your keymap.c:
+
+  In the below example I've added the macros defined earlier to the terminate function as keycodes to ignore (ie not terminate on).
+#+begin_src C
+// Returns true if the case modes should terminate, false if they continue
+// Note that the keycodes given to this function will be stripped down to
+// basic keycodes if they are dual function keys. Meaning a modtap on 'a'
+// will pass KC_A rather than LSFT_T(KC_A).
+// Case delimiters will also not be passed into this function.
+bool terminate_case_modes(uint16_t keycode, const keyrecord_t *record) {
+    switch (keycode) {
+        // Keycodes to ignore (don't disable caps word)
+        case KC_A ... KC_Z:
+        case KC_1 ... KC_0:
+        case KC_MINS:
+        case KC_UNDS:
+        case KC_BSPC:
+        case CAPSWORD:
+        case SNAKECASE:
+            // If mod chording disable the mods
+            if (record->event.pressed && (get_mods() != 0)) {
+                return true;
+            }
+            break;
+        default:
+            if (record->event.pressed) {
+                return true;
+            }
+            break;
+    }
+    return false;
+}
+#+end_src
+
+You can of course tweak this to get the exact functionality you want. Some people prefer to use a switch statement where they just look for keys to end on, and default to keeping the mode enabled otherwise. I prefer the above method because I would rather exit the mode than stay in it.

@@ -1,6 +1,40 @@
-#+TITLE: Kyria Keymap
-
+* Kyria Keymap
 ** About
 This is my QMK Kyria keymap, it has some nifty features and an interesting base layer.
 
-I've been sort of tracking my decisions regarding the base layer in [[./logs.org]]
+The base alpha layer I use is a modified RSTHD, which has some /interesting/ (perhaps dubious), choices.
+To understand my thought process you can read my [[./logs.org][Keymap Logs]].
+
+** Features
+*** Case Modes
+Case modes is a feature that implements different case handling modes, [[*Caps Word][Caps Word]], and [[*X-Case][X-Case]]. See [[./casemodes.c][casemodes.c]] for implementation details.
+
+Also I'd like to shout out the [[https://splitkb.com][splitkb.com]] discord users for all their input and ideas with this feature.
+
+**** Caps Word
+Caps word is a feature I came up with a while back that essentially acts as a caps lock key but only for the duration of a "word".
+This makes macros like =CAPS_WORD= really easy to type, it feels a lot like using one shot shift, and it pairs very nicely with it.
+What defines a "word" is sort of up for debate, I started out just checking to see if I had hit space or ESC but found that there were other things I wanted to exit on, like punctuation.
+So now I detect whether ~space~, ~backspace~, ~-~, ~_~, or an alphanumeric is hit, if so we stay in caps word state, if not, it gets disabled. I also check for mod chording with these keys and if you are chording, it will also disable caps word (e.g. on ~Ctrl+S~).
+
+The actual behavior of when to disable caps word can be tweaked using =terminate_case_mode()=.
+
+To use this feature =enable_caps_word()= or =toggle_caps_word()= can be called from a macro, combo, tap dance, or whatever else you can think of.
+
+**** X-Case
+X-Case is an idea from [[https://github.com/baffalop][@baffalop]], it's takes the idea of caps word but applies it to different kinds of programming cases.
+So for example say you want to type in ~my_snake_case_variable~, rather than pressing ~_~ every time (which is almost certainly behind a layer), you can hit a "snake_case" macro that turns all your spaces into underscores, it can then be exited using whatever you define as the end of a word for =terminate_case_mode()=.
+[[https://github.com/baffalop][@baffalop]] also suggested using a double tap space as an exit condition, which is also implemented here.
+
+Now this is just a snake case macro, what if you want kebab-case? Well x-case can be applied here, but now instead of replacing space with an ~_~ it replaces it with a ~-~ instead.
+The idea of x-case is to make it easy to achieve these kinds of case modes. For example to enable snake_case mode, you just need to call =enable_xcase_with(KC_UNDS)= and for kebab it's simply =enable_xcase_with(KC_MINS)=.
+
+So you might ask, what about camelCase? Well, we got that covered too! If you call =enable_xcase_with(OSM(MOD_LSFT))=, your spaces will be turned into one shot shifts enabling you to write camelCase.
+
+Finally, because you might want to use this for some more obscure use cases, theirs the =enable_xcase()= function.
+This function will intercept your next keystroke and use that as it's case delimiter.
+For example, calling =enable_xcase()= and then hitting your ~/~ key will result in your spaces begin turned into slashes. (This is the equivalent of calling =enable_xcase_with(KC_SLSH))=)
+
+Note that =terminate_case_mode()= also determines the stop conditions for x-case, however the spaces (and their new values) will not be passed through the terminate function.
+
+**** TODO Configuration / Usage

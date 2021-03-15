@@ -1,4 +1,4 @@
-#+TITLE: Logs
+#+TITLE: Keymap Logs
 * RSTHD vs THE-1
 ** RSTHD with Mod-Tap Shift
 I have given two mappings a try so far, RSTHD and THE-1. I started with a slightly modded RSTHD where I swapped =z= and =j= so that I satisfied my vim needs. I practiced this layout with mod tap shift on the index fingers for a week and got up to 30wpm (yay!). But I quickly found myself stumbling with the mod tap shift, especially on =the= since it's just /so fast/ on RSTHD. Even after trying all the mod tap tweaking, I never could get =The= consistently. And since one of the main reasons I got the Kyria was to make things more consistent, this really bothered me. So I decided one shots might be the route for me, and shopped around for another layout I could try.

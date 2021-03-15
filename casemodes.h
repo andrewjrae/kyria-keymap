@@ -27,5 +27,12 @@ void disable_caps_word(void);
 // Toggle caps word
 void toggle_caps_word(void);
 
+// Enable xcase and pickup the next keystroke as the delimiter
+void enable_xcase(void);
+// Enable xcase with the specified delimiter
+void enable_xcase_with(uint16_t delimiter);
+// Disable xcase
+void disable_xcase(void);
+
 // Function to be put in process user
-bool process_caps_word(uint16_t keycode, const keyrecord_t *record);
+bool process_case_modes(uint16_t keycode, const keyrecord_t *record);

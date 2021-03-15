@@ -15,7 +15,7 @@
  */
 #include QMK_KEYBOARD_H
 #include <string.h>
-#include "capsword.h"
+#include "casemodes.h"
 
 #ifdef MY_SPLIT_RIGHT
 #endif
@@ -238,7 +238,7 @@ LT(_NAV,KC_SLSH), KC_R,    KC_S, KC_T, KC_H, KC_D,                              
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // Process caps word for updates
-    if (!process_caps_word(keycode, record)) {
+    if (!process_case_modes(keycode, record)) {
         return false;
     }
 
@@ -310,7 +310,8 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
             break;
         case XL_COMBO:
             if (pressed) {
-                enable_caps_word(); // toggle caps word
+                /* enable_caps_word(); // toggle caps word */
+                enable_xcase();
             }
             break;
     }

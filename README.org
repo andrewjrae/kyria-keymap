@@ -61,7 +61,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 - Add ways to enable the modes in your keymap.c, for example you could use custom keycodes (macros):
 
   Remember to always start your custom keycodes at =SAFE_RANGE=.
-#+begin_src C
+  #+begin_src C
 enum custom_keycodes {
     CAPSWORD = SAFE_RANGE,
     SNAKECASE,
@@ -89,12 +89,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             return true;
     }
 }
-#+end_src
+  #+end_src
 
 - (Optional) Change the mode termination conditions by creating a custom =terminate_case_mode()= function in your keymap.c:
 
   In the below example I've added the macros defined earlier to the terminate function as keycodes to ignore (ie not terminate on).
-#+begin_src C
+  #+begin_src C
 // Returns true if the case modes should terminate, false if they continue
 // Note that the keycodes given to this function will be stripped down to
 // basic keycodes if they are dual function keys. Meaning a modtap on 'a'
@@ -123,8 +123,7 @@ bool terminate_case_modes(uint16_t keycode, const keyrecord_t *record) {
     }
     return false;
 }
-#+end_src
-
-You can of course tweak this to get the exact functionality you want. Some people prefer to use a switch statement where they look for keys to end on, and default to keeping the mode enabled otherwise. I prefer the above method because I would rather exit the mode than stay in it.
+  #+end_src
+ You can of course tweak this to get the exact functionality you want. Some people prefer to use a switch statement where they look for keys to end on, and default to keeping the mode enabled otherwise. I prefer the above method because I would rather exit the mode than stay in it.
 
 - (Optional) Use shift rather than caps lock in caps word. To do this simply add =#define CAPSWORD_USE_SHIFT= in you config.h.

@@ -7,11 +7,12 @@ To understand my thought process you can read my [[./logs.org][Keymap Logs]].
 
 ** Features
 *** Case Modes
-Case modes is a feature that implements different case handling modes, [[*Caps Word][Caps Word]], and [[*X-Case][X-Case]]. See [[./casemodes.c][casemodes.c]] for implementation details.
+Case modes is a feature that implements different case handling modes, [[caps-word][Caps Word]], and [[xcase][X-Case]]. See [[./casemodes.c][casemodes.c]] for implementation details.
 
 Also I'd like to shout out the [[https://splitkb.com][splitkb.com]] discord users for all their input and ideas with this feature.
 
 **** Caps Word
+#+NAME: caps-word
 Caps word is a feature I came up with a while back that essentially acts as a caps lock key but only for the duration of a "word".
 This makes macros like =CAPS_WORD= really easy to type, it feels a lot like using one shot shift, and it pairs very nicely with it.
 What defines a "word" is sort of up for debate, I started out just checking to see if I had hit space or ESC but found that there were other things I wanted to exit on, like punctuation.
@@ -22,6 +23,7 @@ The actual behavior of when to disable caps word can be tweaked using =terminate
 To use this feature =enable_caps_word()= or =toggle_caps_word()= can be called from a macro, combo, tap dance, or whatever else you can think of.
 
 **** X-Case
+#+NAME: xcase
 X-Case is an idea from [[https://github.com/baffalop][@baffalop]], it's takes the idea of caps word but applies it to different kinds of programming cases.
 So for example say you want to type in ~my_snake_case_variable~, rather than pressing ~_~ every time (which is almost certainly behind a layer), you can hit a "snake_case" macro that turns all your spaces into underscores, it can then be exited using whatever you define as the end of a word for =terminate_case_mode()=.
 [[https://github.com/baffalop][@baffalop]] also suggested using a double tap space as an exit condition, which is also implemented here.
@@ -38,3 +40,4 @@ For example, calling =enable_xcase()= and then hitting your ~/~ key will result 
 Note that =terminate_case_mode()= also determines the stop conditions for x-case, however the spaces (and their new values) will not be passed through the terminate function.
 
 **** TODO Configuration / Usage
+-

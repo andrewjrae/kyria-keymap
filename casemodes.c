@@ -16,6 +16,18 @@
 
 #include "casemodes.h"
 
+/* The caps word concept started with me @iaap on splitkb.com discord.
+ * However it has been implemented and extended by many splitkb.com users:
+ * @theol0403 made many improvements to my initial implementation
+ * @precondition used caps lock rather than shifting
+ * @dnaq his own implementation which also used caps lock
+ * @sevanteri added underscores on spaces
+ * @metheon extended on @sevanteri's work and added specific modes for
+ * snake_case and SCREAMING_SNAKE_CASE
+ * @baffalop came up with the idea for xcase, which he implements in his own
+ * repo, however I have my own implementation here
+ */
+
 // enum for the xcase states
 enum xcase_state {
     XCASE_OFF = 0,  // xcase is off

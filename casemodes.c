@@ -208,21 +208,21 @@ bool process_case_modes(uint16_t keycode, const keyrecord_t *record) {
                     ++distance_to_last_delim;
                 }
             }
-        }
 
-        // check if the case modes have been terminated
-        if (terminate_case_modes(keycode, record)) {
-            disable_caps_word();
-            disable_xcase();
-        }
-#ifdef CAPSWORD_USE_SHIFT
-        else if (keycode >= KC_A && keycode <= KC_Z){
-            if (record->event.pressed) {
-                tap_code16(LSFT(keycode));
+            // check if the case modes have been terminated
+            if (terminate_case_modes(keycode, record)) {
+                disable_caps_word();
+                disable_xcase();
             }
-            return false;
-        }
+#ifdef CAPSWORD_USE_SHIFT
+            else if (keycode >= KC_A && keycode <= KC_Z){
+                tap_code16(LSFT(keycode));
+                return false;
+            }
 #endif
+
+        } // end if event.pressed
+
         return true;
     }
     return true;

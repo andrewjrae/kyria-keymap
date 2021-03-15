@@ -8,7 +8,7 @@ To understand my thought process you can read my [[./logs.org][Keymap Logs]].
 
 ** Features
 *** Case Modes
-Case modes is a feature that implements different case handling modes, [[caps-word][Caps Word]], and [[x-case][X-Case]]. See [[./casemodes.c][casemodes.c]] for implementation details.
+Case modes is a feature that implements different case handling modes, [[#caps-word][Caps Word]], and [[#x-case][X-Case]]. See [[./casemodes.c][casemodes.c]] for implementation details.
 
 Also I'd like to shout out the [[https://splitkb.com][splitkb.com]] discord users for all their input and ideas with this feature.
 
@@ -16,7 +16,7 @@ Also I'd like to shout out the [[https://splitkb.com][splitkb.com]] discord user
 #+NAME: caps-word
 Caps word is a feature I came up with a while back that essentially acts as a caps lock key but only for the duration of a "word".
 This makes macros like =CAPS_WORD= really easy to type, it feels a lot like using one shot shift, and it pairs very nicely with it.
-What defines a "word" is sort of up for debate, I started out just checking to see if I had hit space or ESC but found that there were other things I wanted to exit on, like punctuation.
+What defines a "word" is sort of up for debate, I started out with a simple check to see if I had hit space or ESC but found that there were other things I wanted to exit on, like punctuation.
 So now I detect whether ~space~, ~backspace~, ~-~, ~_~, or an alphanumeric is hit, if so we stay in caps word state, if not, it gets disabled. I also check for mod chording with these keys and if you are chording, it will also disable caps word (e.g. on ~Ctrl+S~).
 
 The actual behavior of when to disable caps word can be tweaked using =terminate_case_mode()=.
@@ -91,7 +91,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
 #+end_src
 
-- Change the mode termination conditions by creating a custom =terminate_case_mode()= function in your keymap.c:
+- (Optional) Change the mode termination conditions by creating a custom =terminate_case_mode()= function in your keymap.c:
 
   In the below example I've added the macros defined earlier to the terminate function as keycodes to ignore (ie not terminate on).
 #+begin_src C
@@ -125,4 +125,6 @@ bool terminate_case_modes(uint16_t keycode, const keyrecord_t *record) {
 }
 #+end_src
 
-You can of course tweak this to get the exact functionality you want. Some people prefer to use a switch statement where they just look for keys to end on, and default to keeping the mode enabled otherwise. I prefer the above method because I would rather exit the mode than stay in it.
+You can of course tweak this to get the exact functionality you want. Some people prefer to use a switch statement where they look for keys to end on, and default to keeping the mode enabled otherwise. I prefer the above method because I would rather exit the mode than stay in it.
+
+- (Optional) Use shift rather than caps lock in caps word. To do this simply add =#define CAPSWORD_USE_SHIFT= in you config.h.

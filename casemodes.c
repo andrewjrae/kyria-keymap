@@ -28,13 +28,6 @@
  * repo, however I have my own implementation here
  */
 
-// enum for the xcase states
-enum xcase_state {
-    XCASE_OFF = 0,  // xcase is off
-    XCASE_ON,       // xcase is actively on
-    XCASE_WAIT,     // xcase is waiting for the delimiter input
-};
-
 // bool to keep track of the caps word state
 static bool caps_word_on = false;
 
@@ -80,6 +73,11 @@ void toggle_caps_word(void) {
     else {
         enable_caps_word();
     }
+}
+
+// Get xcase state
+enum xcase_state get_xcase_state(void) {
+    return xcase_state;
 }
 
 // Enable xcase and pickup the next keystroke as the delimiter

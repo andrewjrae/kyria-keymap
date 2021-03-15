@@ -70,22 +70,24 @@ void toggle_caps_word(void) {
     }
 }
 
-// Start xcase and pickup the next keystroke as the delimiter
+// Enable xcase and pickup the next keystroke as the delimiter
 void enable_xcase(void) {
     xcase_state = XCASE_WAIT;
 }
 
-// Start xcase with the specified delimiter
+// Enable xcase with the specified delimiter
 void enable_xcase_with(uint16_t delimiter) {
     xcase_state = XCASE_ON;
     xcase_delimiter = delimiter;
     distance_to_last_delim = -1;
 }
 
+// Disable xcase
 void disable_xcase(void) {
     xcase_state = XCASE_OFF;
 }
 
+// Place the current xcase delimiter
 static void place_delimiter(void) {
     switch (xcase_delimiter) {
         case QK_ONE_SHOT_MOD ... QK_ONE_SHOT_MOD_MAX: {
@@ -94,23 +96,18 @@ static void place_delimiter(void) {
             set_oneshot_mods(mods);
             break;
         }
-        /* case QK_ONE_SHOT_LAYER ... QK_ONE_SHOT_LAYER_MAX: */
-        /*     set_oneshot_layer(xcase_delimiter & 0xFF, 1); */
-        /*     break; */
         default:
             tap_code16(xcase_delimiter);
             break;
     }
 }
 
+// Removes a delimiter, used for double tap space exit
 static void remove_delimiter(void) {
     switch (xcase_delimiter) {
         case QK_ONE_SHOT_MOD ... QK_ONE_SHOT_MOD_MAX:
             clear_oneshot_mods();
             break;
-        /* case QK_ONE_SHOT_LAYER ... QK_ONE_SHOT_LAYER_MAX: */
-        /*     set_oneshot_layer(xcase_delimiter & 0xFF, 0); */
-        /*     break; */
         default:
             tap_code(KC_BSPC);
             break;
@@ -159,6 +156,10 @@ bool process_case_modes(uint16_t keycode, const keyrecord_t *record) {
         if (record->event.pressed) {
             // grab the next input to be the delimiter
             if (xcase_state == XCASE_WAIT) {
+                // factor in mods
+                if (get_mods() & MOD_MASK_SHIFT) {
+                    keycode = LSFT(keycode);
+                }
                 enable_xcase_with(keycode);
                 return false;
             }
@@ -187,7 +188,7 @@ bool process_case_modes(uint16_t keycode, const keyrecord_t *record) {
                 else if (distance_to_last_delim >= 0) {
                     // puts back a one shot delimiter if you we're back to the delimiter pos
                     if (distance_to_last_delim == 0 &&
-                        ((xcase_delimiter >= QK_ONE_SHOT_MOD && xcase_delimiter <= QK_ONE_SHOT_MOD_MAX))) {//|| (keycode >= QK_ONE_SHOT_LAYER && keycode <= QK_ONE_SHOT_LAYER_MAX))) {
+                        ((xcase_delimiter >= QK_ONE_SHOT_MOD && xcase_delimiter <= QK_ONE_SHOT_MOD_MAX))) {
                         place_delimiter();
                     }
                     ++distance_to_last_delim;

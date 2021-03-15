@@ -156,6 +156,7 @@ bool process_case_modes(uint16_t keycode, const keyrecord_t *record) {
         switch (keycode) {
             case QK_MOD_TAP ... QK_MOD_TAP_MAX:
             case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:
+            case QK_TAP_DANCE ... QK_TAP_DANCE_MAX:
                 // Earlier return if this has not been considered tapped yet
                 if (record->tap.count == 0)
                     return true;

@@ -21,7 +21,7 @@ So now I detect whether ~space~, ~backspace~, ~-~, ~_~, or an alphanumeric is hi
 
 The actual behavior of when to disable caps word can be tweaked using =terminate_case_mode()=.
 
-By default caps lock is used as the underlying capitalization method, however you can also choose to individually each keycode as the go out. This is useful for people who have changed the functionality of caps lock at the OS level. To do this simply add =#define CAPSWORD_USE_SHIFT= in you config.h.
+By default caps lock is used as the underlying capitalization method, however you can also choose to individually shift each keycode as the go out. This is useful for people who have changed the functionality of caps lock at the OS level. To do this simply add =#define CAPSWORD_USE_SHIFT= in you config.h.
 
 To use this feature =enable_caps_word()= or =toggle_caps_word()= can be called from a macro, combo, tap dance, or whatever else you can think of.
 
@@ -127,3 +127,5 @@ bool terminate_case_modes(uint16_t keycode, const keyrecord_t *record) {
  You can of course tweak this to get the exact functionality you want. Some people prefer to use a switch statement where they look for keys to end on, and default to keeping the mode enabled otherwise. I prefer the above method because I would rather exit the mode than stay in it.
 
 - (Optional) Use shift rather than caps lock in caps word. To do this simply add =#define CAPSWORD_USE_SHIFT= in you config.h.
+
+

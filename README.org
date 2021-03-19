@@ -28,7 +28,7 @@ To use this feature =enable_caps_word()= or =toggle_caps_word()= can be called f
 **** X-Case
 #+NAME: x-case
 X-Case is an idea from [[https://github.com/baffalop][@baffalop]], it's takes the idea of caps word but applies it to different kinds of programming cases.
-So for example say you want to type in ~my_snake_case_variable~, rather than pressing ~_~ every time (which is almost certainly behind a layer), you can hit a "snake_case" macro that turns all your spaces into underscores, it can then be exited using whatever you define as the end of a word for =terminate_case_mode()=.
+So for example say you want to type ~my_snake_case_variable~, rather than pressing ~_~ every time (which is almost certainly behind a layer), you can hit a "snake_case" macro that turns all your spaces into underscores, it can then be exited using whatever you define as the end of a word in =terminate_case_mode()=.
 [[https://github.com/baffalop][@baffalop]] also suggested using a double tap space as an exit condition, which is also implemented here.
 
 Now this is just a snake case macro, what if you want kebab-case? Well x-case can be applied here, but now instead of replacing space with an ~_~ it replaces it with a ~-~ instead.

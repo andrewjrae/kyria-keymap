@@ -230,16 +230,16 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 
 + Then you simply need to add the display macro to your =oled_task_user()=:
-#+begin_src C
+ #+begin_src C
 void oled_task_user(void) {
     ...
     OLED_LEADER_DISPLAY();
     ...
 }
-#+end_src
+ #+end_src
 
-This macro simply prints the current leader sequence on a line of your display. Under the hood it's quite simple and just uses the =leader_display_str()= function but displays it for a little while after it's finished.
-#+begin_src C
+ This macro simply prints the current leader sequence on a line of your display. Under the hood it's quite simple and just uses the =leader_display_str()= function but displays it for a little while after it's finished.
+ #+begin_src C
 #define OLED_LEADER_DISPLAY()                       \
     static uint16_t timer = 0;                      \
     if (is_leading()) {                             \
@@ -252,4 +252,4 @@ This macro simply prints the current leader sequence on a line of your display. 
     else {                                          \
         oled_write_ln("", false);                   \
     }
-#+end_src
+ #+end_src

@@ -33,16 +33,16 @@ bool process_leader(uint16_t keycode, const keyrecord_t *record);
 #ifdef LEADER_DISPLAY_STR
 char *leader_display_str(void);
 
-#define OLED_LEADER_DISPLAY()                   \
-    static uint16_t timer = 0; \
-    if (is_leading()) { \
+#define OLED_LEADER_DISPLAY()                       \
+    static uint16_t timer = 0;                      \
+    if (is_leading()) {                             \
         oled_write_ln(leader_display_str(), false); \
-        timer = timer_read(); \
-    } \
-    else if (timer_elapsed(timer) < 150){ \
+        timer = timer_read();                       \
+    }                                               \
+    else if (timer_elapsed(timer) < 175){           \
         oled_write_ln(leader_display_str(), false); \
-    } \
-    else { \
-        oled_write_ln("", false); \
+    }                                               \
+    else {                                          \
+        oled_write_ln("", false);                   \
     }
 #endif

@@ -1,18 +1,31 @@
+#+TITLE: Kyria Keymap
 #+OPTIONS: ^:nil
-* Kyria Keymap
-** About
+
+* Table of Contents :TOC_3:noexport:
+- [[#about][About]]
+- [[#features][Features]]
+  - [[#case-modes][Case Modes]]
+    - [[#caps-word][Caps Word]]
+    - [[#x-case][X-Case]]
+    - [[#configuration--usage][Configuration / Usage]]
+  - [[#userspace-leader-sequences][Userspace Leader Sequences]]
+    - [[#how-it-works][How it works]]
+    - [[#configuration][Configuration]]
+    - [[#displaying-on-the-oled][Displaying on the OLED]]
+
+* About
 This is my QMK Kyria keymap, it has some nifty features and an interesting base layer.
 
 The base alpha layer I use is a modified RSTHD, which has some /interesting/ (perhaps dubious), choices.
 To understand my thought process you can read my [[./logs.org][Keymap Logs]].
 
-** Features
-*** Case Modes
+* Features
+** Case Modes
 Case modes is a feature that implements different case handling modes, [[#caps-word][Caps Word]], and [[#x-case][X-Case]]. See [[./casemodes.c][casemodes.c]] for implementation details.
 
 Also I'd like to shout out the [[https://splitkb.com][splitkb.com]] discord users for all their input and ideas with this feature.
 
-**** Caps Word
+*** Caps Word
 Caps word is a feature I came up with a while back that essentially acts as a caps lock key but only for the duration of a "word".
 This makes macros like =CAPS_WORD= really easy to type, it feels a lot like using one shot shift, and it pairs very nicely with it.
 What defines a "word" is sort of up for debate, I started out with a simple check to see if I had hit space or ESC but found that there were other things I wanted to exit on, like punctuation.
@@ -24,7 +37,7 @@ By default caps lock is used as the underlying capitalization method, however yo
 
 To use this feature =enable_caps_word()= or =toggle_caps_word()= can be called from a macro, combo, tap dance, or whatever else you can think of.
 
-**** X-Case
+*** X-Case
 X-Case is an idea from [[https://github.com/baffalop][@baffalop]], it's takes the idea of caps word but applies it to different kinds of programming cases.
 So for example say you want to type ~my_snake_case_variable~, rather than pressing ~_~ every time (which is almost certainly behind a layer), you can hit a "snake_case" macro that turns all your spaces into underscores, it can then be exited using whatever you define as the end of a word in =terminate_case_mode()=.
 [[https://github.com/baffalop][@baffalop]] also suggested using a double tap space as an exit condition, which is also implemented here.
@@ -42,9 +55,9 @@ Note that =terminate_case_mode()= also determines the stop conditions for x-case
 
 It should also not that if you want some thing like SCREAMING_SNAKE_CASE, you just have to enable caps word and xcase (in either order).
 
-**** Configuration / Usage
-- Add [[./casemodes.c][casemodes.c]] to your ~SRCS~ by calling adding ~SRC += casemodes.c~ to your rules.mk.
-- Add =process_case_modes()= to your =process_record_user()=, it can either go at the top or the bottom, it depends on how you want it to interact with your keycodes.
+*** Configuration / Usage
++ Add [[./casemodes.c][casemodes.c]] to your ~SRCS~ by calling adding ~SRC += casemodes.c~ to your rules.mk.
++ Add =process_case_modes()= to your =process_record_user()=, it can either go at the top or the bottom, it depends on how you want it to interact with your keycodes.
 
   If you process at the beginning it will look something like this, make sure that you return false when =process_case_modes= returns false.
   #+begin_src C
@@ -56,7 +69,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     ...
   #+end_src
 
-- Add ways to enable the modes in your keymap.c, for example you could use custom keycodes (macros):
++ Add ways to enable the modes in your keymap.c, for example you could use custom keycodes (macros):
 
   Remember to always start your custom keycodes at =SAFE_RANGE=.
   #+begin_src C
@@ -89,7 +102,7 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 }
   #+end_src
 
-- (Optional) Change the mode termination conditions by creating a custom =terminate_case_mode()= function in your keymap.c:
++ (Optional) Change the mode termination conditions by creating a custom =terminate_case_mode()= function in your keymap.c:
   In the below example I've added the macros defined earlier to the terminate function as keycodes to ignore (ie not terminate on).
   #+begin_src C
 // Returns true if the case modes should terminate, false if they continue
@@ -123,9 +136,9 @@ bool terminate_case_modes(uint16_t keycode, const keyrecord_t *record) {
   #+end_src
  You can of course tweak this to get the exact functionality you want. Some people prefer to use a switch statement where they look for keys to end on, and default to keeping the mode enabled otherwise. I prefer the above method because I would rather exit the mode than stay in it.
 
-- (Optional) Use shift rather than caps lock in caps word. To do this simply add =#define CAPSWORD_USE_SHIFT= in you config.h.
++ (Optional) Use shift rather than caps lock in caps word. To do this simply add =#define CAPSWORD_USE_SHIFT= in you config.h.
 
-*** Userspace Leader Sequences
+** Userspace Leader Sequences
 I don't like the default behavior of QMK's leader key sequences, the timeout based approach is not something I'm used to coming from vim/doom-emacs.
 So I whipped up a quick little userspace version in [[./leader.c][leader.c]]. This version doesn't timeout, but can be escaped using the =LEADER_ESC_KEY= which defaults to =KC_ESC=.
 
@@ -135,11 +148,10 @@ That being said there is no possibility for infinite loops as long as the =LEADE
 
 While this implementation is perhaps a little less user friendly, it's easy to organize your different categories as each one will be it's own function.
 
-I also implemented a =leader_display_str()= function, which returns the an ASCII representation of the current leader sequence.
-This won't be enabled unless you put =#define LEADER_DISPLAY_STR= in your config.h.
+I also implemented a =leader_display_str()= function, which returns an ASCII representation of the current leader sequence. This won't be enabled unless you put =#define LEADER_DISPLAY_STR= in your config.h.
 The maximum length of this string defaults to 19, but can be redefined with the =LEADER_DISPLAY_LEN= macro, note that this is the length /excluding/ the null terminator.
 
-**** How it works
+*** How it works
 Once a leader sequence has started each keystroke is intercepted, stripped of any mod-taps or hold-taps, and passed to the current =leader_func=.
 The leader function is a function pointer that is passed the current keycode, and will return the pointer to the next leader function, or =NULL= if done with the leader sequence.
 
@@ -170,9 +182,8 @@ void *leader_start_func(uint16_t keycode) {
 }
 #+end_src
 
-The =leader_layers_func= would then look something like this:
+The =leader_layers_func= could then look something like this:
 #+begin_src C
-/* --------------- LEADER SEQUENCES --------------- */
 void *leader_layers_func(uint16_t keycode) {
     switch (keycode) {
         case KC_C:
@@ -192,3 +203,53 @@ void *leader_layers_func(uint16_t keycode) {
 #+end_src
 
 Similar functions would then exist for =leader_open_func= and =leader_toggles_func=. Of course this is just an example, you can do whatever you want.
+
+*** Configuration
++ Add [[./leader.c][leader.c]] to your ~SRCS~ by calling adding ~SRC += leader.c~ to your rules.mk.
++ Add =process_leader()= to your =process_record_user()=, this /must/ go at the top of your =process_record_user()= if you have made a macro for the leader key that triggers on press.
+  This is because it will attempt to be processed as part of the sequence.
+  To get around this you could also just make your macro trigger on release rather than on press.
+
+  If you process at the beginning it will look something like this, make sure that you return false when =process_leader()= returns false.
+  #+begin_src C
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    // Process leader key sequences
+    if (!process_leader(keycode, record)) {
+        return false;
+    }
+    ...
+  #+end_src
+
++ Add ways to enable the modes in your keymap.c, for example you could use custom keycodes (macros). To start a leader sequence use the =start_leading()= and to stop use =stop_leading()=. If you want to know whether a leader sequence is currently underway, use =is_leading()=.
+
+*** Displaying on the OLED
++  To display the leader sequence on your OLED, you first need to enable it in your config.h:
+  #+begin_src C
+#define LEADER_DISPLAY_STR
+  #+end_src
+
+
++ Then you simply need to add the display macro to your =oled_task_user()=:
+#+begin_src C
+void oled_task_user(void) {
+    ...
+    OLED_LEADER_DISPLAY();
+    ...
+}
+#+end_src
+
+This macro simply prints the current leader sequence on a line of your display. Under the hood it's quite simple and just uses the =leader_display_str()= function but displays it for a little while after it's finished.
+#+begin_src C
+#define OLED_LEADER_DISPLAY()                       \
+    static uint16_t timer = 0;                      \
+    if (is_leading()) {                             \
+        oled_write_ln(leader_display_str(), false); \
+        timer = timer_read();                       \
+    }                                               \
+    else if (timer_elapsed(timer) < 175){           \
+        oled_write_ln(leader_display_str(), false); \
+    }                                               \
+    else {                                          \
+        oled_write_ln("", false);                   \
+    }
+#+end_src

@@ -16,6 +16,7 @@
 #include QMK_KEYBOARD_H
 #include <string.h>
 #include "casemodes.h"
+#include "leader.h"
 
 #ifdef MY_SPLIT_RIGHT
 #endif
@@ -28,11 +29,11 @@ enum layers {
     _NUM,
     _SYM,
     _FUN,
-    _LIGHTS
 };
 
 enum custom_keycodes {
     CAPSWRD = SAFE_RANGE,
+    LEADER,
 };
 
 // clang-format off
@@ -59,7 +60,7 @@ enum custom_keycodes {
     LAYOUT( \
       KC_TAB,   K01,   K02,   K03,     K04,     K05,                                          K06,     K07,    K08,    K09,    K0A,   KC_PIPE, \
       MY_ESC,   K11,   K12,   K13,     K14,     K15,                                          K16,     K17,    K18,    K19,    K1A,   KQUOT, \
-      KC_SLSH,  K21,   K22,   K23,     K24,     K25,     KC_LEAD, _______, _______, KC_LEAD,  K26,     K27,    K28,    K29,    K2A,   KC_MINS, \
+      KC_SLSH,  K21,   K22,   K23,     K24,     K25,     LEADER,  _______, _______, LEADER,   K26,     K27,    K28,    K29,    K2A,   KC_MINS, \
                               _______, KC_LGUI, MY_LALT, KTHMB,   MY_ENT,  MY_BSPC, MY_SPC,   MY_RCTL, KC_RGUI, _______ \
     )
 // clang-format on
@@ -86,8 +87,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_RSTHD] = MY_HOMEROW_LAYOUT(
         KC_TAB,   KC_Z,    KC_C, KC_Y, KC_F, KC_P,                                     KC_X, KC_M, KC_QUOT, KC_U,    KC_Q,    KC_PIPE,
 LT(_NAV,KC_SLSH), KC_R,    KC_S, KC_T, KC_H, KC_D,                                     KC_L, KC_N, KC_A,    KC_I,    KC_O,    KC_SCLN,
-       CAPSWRD,  MY_LSFT, KC_V, KC_G, KC_K, KC_B, KC_LEAD, _______, _______, KC_LEAD, KC_W, KC_J, KC_COMM, KC_DOT,  MY_RSFT, KC_MINS,
-        _______, KC_LGUI, KC_ESC, RST_SPC, RST_ENT, MY_BSPC, RST_E, RST_TAB, KC_RGUI, _______
+        CAPSWRD,  MY_LSFT, KC_V, KC_G, KC_K, KC_B, LEADER,  _______, _______, LEADER,  KC_W, KC_J, KC_COMM, KC_DOT,  MY_RSFT, KC_MINS,
+                        _______, KC_LGUI, KC_ESC, RST_SPC, RST_ENT, MY_BSPC, RST_E, RST_TAB, KC_RGUI, _______
     ),
 /*
  * Alpha Layer: ATHEX a modified THE-1 for better vim usage and personal comfort
@@ -242,11 +243,20 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
     }
 
+    if (!process_leader(keycode, record)) {
+        return false;
+    }
+
     // Regular user keycode case statement
     switch (keycode) {
         case CAPSWRD:
             if (record->event.pressed) {
-                enable_caps_word();
+                toggle_caps_word();
+            }
+            return false;
+        case LEADER:
+            if (record->event.pressed) {
+                start_leading();
             }
             return false;
         case KC_MINS:
@@ -284,8 +294,8 @@ enum combo_events {
 
 const uint16_t PROGMEM pd_combo[] = {KC_P, KC_D, COMBO_END};
 const uint16_t PROGMEM xl_combo[] = {KC_X, KC_L, COMBO_END};
-/* const uint16_t PROGMEM left_thumb_combo[] = {RST_E, KC_LEAD, COMBO_END}; */
-/* const uint16_t PROGMEM right_thumb_combo[] = {RST_SPC, KC_LEAD, COMBO_END}; */
+/* const uint16_t PROGMEM left_thumb_combo[] = {RST_E, LEADER,  COMBO_END}; */
+/* const uint16_t PROGMEM right_thumb_combo[] = {RST_SPC, LEADER,  COMBO_END}; */
 
 combo_t key_combos[COMBO_COUNT] = {
   [ PD_COMBO ] = COMBO_ACTION(pd_combo),
@@ -305,7 +315,7 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
             break;
         case RIGHT_LEAD:
             if (pressed) {
-                qk_leader_start(); // the underlying leader command
+                start_leading();
             }
             break;
         case XL_COMBO:
@@ -319,90 +329,33 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
 #    endif
 
 /* --------------- LEADER SEQUENCES --------------- */
-#ifdef LEADER_ENABLE
-LEADER_EXTERNS();
-
-#ifdef OLED_DRIVER_ENABLE
-static const char keycode_to_ascii_lut[58] = {0, 0, 0, 0, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 0, 0, 0, '\t', ' ', '-', '=', '[', ']', '\\', 0, ';', '\'', '`', ',', '.', '/'};
-
-static uint8_t leader_seq_idx;
-static uint8_t leader_display_size;
-static const char space_ascii[] = "SPC";
-static char leader_display[19];
-
-void update_leader_display(uint16_t keycode) {
-    leader_seq_idx = leader_sequence_size;
-    leader_display[leader_display_size] = ' ';
-    ++leader_display_size;
+void *leader_layers_func(uint16_t keycode) {
     switch (keycode) {
-        case KC_SPC:
-            memcpy(leader_display+leader_display_size, space_ascii, sizeof(space_ascii));
-            leader_display_size += sizeof(space_ascii);
+        case KC_A:
+            layer_move(_ATHEX);
+            break;
+        case KC_R:
+            layer_move(_RSTHD);
+            break;
+        case KC_Q:
+            layer_move(_QWERTY);
             break;
         default:
-            leader_display[leader_display_size] = keycode_to_ascii_lut[keycode];
-            ++leader_display_size;
             break;
     }
+    return NULL;
 }
 
-void leader_start(void) {
-    leader_display[0] = 'L';
-    leader_display[1] = 'D';
-    leader_display[2] = 'R';
-    leader_display[3] = '-';
-    leader_display_size = 3;
-}
-#endif // end oled enable
 
-void matrix_scan_user(void) {
-  LEADER_DICTIONARY() {
-#ifdef LEADER_SEQ_ESC
-    leader_time = timer_read();
-#endif
-
-    // Open terminal
-    SEQ_TWO_KEYS(KC_O, KC_T) {
-        SEND_STRING(SS_LCTL(SS_LALT("t")));
-        leading = false;
+void *leader_start_func(uint16_t keycode) {
+    switch (keycode) {
+        case KC_L:
+            return leader_layers_func;
+        default:
+            return NULL;
     }
-    // Close window
-    SEQ_TWO_KEYS(KC_W, KC_C) {
-        SEND_STRING(SS_LALT(SS_TAP(X_F4)));
-        leading = false;
-    }
-    if (leader_sequence[0])
-    // Switch to ATHEX
-    SEQ_TWO_KEYS(KC_L, KC_A) {
-        layer_move(_ATHEX);
-        leading = false;
-    }
-    // Switch to RSTHD
-    SEQ_TWO_KEYS(KC_L, KC_R) {
-        layer_move(_RSTHD);
-        leading = false;
-    }
-    // Switch to QWERTY
-    SEQ_TWO_KEYS(KC_L, KC_Q) {
-        layer_move(_QWERTY);
-        leading = false;
-    }
-    // Switch to lights layer
-    SEQ_TWO_KEYS(KC_L, KC_L) {
-        layer_on(_LIGHTS);
-        leading = false;
-    }
-    if (!leading) {
-        leader_end();
-    }
-#ifdef OLED_DRIVER_ENABLE
-    else {
-        leader_display[leader_display_size] = '-';
-    }
-#endif // end oled enable
-  }
+    return NULL;
 }
-#endif // end leader enable
 
 #ifdef OLED_DRIVER_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
@@ -459,25 +412,11 @@ static void render_status(void) {
         case _SYM:
             oled_write_P(PSTR("Symbols\n\n"), false);
             break;
-        case _LIGHTS:
-            oled_write_P(PSTR("Lights\n\n"), false);
-            break;
         default:
             oled_write_P(PSTR("Undefined\n\n"), false);
     }
-#ifdef LEADER_ENABLE
-    // Leader key display
-    if (leading) {
-        if (leader_sequence_size != leader_seq_idx) {
-            update_leader_display(leader_sequence[leader_sequence_size - 1]);
-        }
-    } else if (leader_display_size != 0) {
-        leader_display_size = 0;
-        leader_seq_idx = 0;
-        memset(leader_display, 0, sizeof(leader_display));
-        oled_write(leader_display, false);
-    }
-    oled_write_ln(leader_display, false);
+#ifdef LEADER_DISPLAY_STR
+    oled_write_ln(leader_display_str(), false);
 #endif // end leader enable
 }
 

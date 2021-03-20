@@ -1,5 +1,5 @@
 # User settings
-LEADER_ENABLE = yes      # Enable leader keys
+LEADER_ENABLE = no      # Enable leader keys
 OLED_DRIVER_ENABLE = yes # Enables the use of OLED displays
 COMBO_ENABLE = yes       # Enables combos
 
@@ -12,6 +12,7 @@ ENCODER_ENABLE = no       # Enables the use of one or more encoders
 RGBLIGHT_ENABLE = no      # Enable keyboard RGB underglow
 
 SRC += casemodes.c
+SRC += leader.c
 
 # If flashing the right side
 RIGHT = 0

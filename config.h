@@ -38,9 +38,7 @@
 /* #define CAPSWORD_USE_SHIFT */
 
 // Leader key settings
-#define LEADER_SEQ_ESC KC_ESC
-#define LEADER_TIMEOUT 200
-#define LEADER_PER_KEY_TIMING
+#define LEADER_DISPLAY_STR
 
 // Combo settings
 #define COMBO_COUNT 4

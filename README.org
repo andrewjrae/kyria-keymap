@@ -13,7 +13,6 @@ Case modes is a feature that implements different case handling modes, [[#caps-w
 Also I'd like to shout out the [[https://splitkb.com][splitkb.com]] discord users for all their input and ideas with this feature.
 
 **** Caps Word
-#+NAME: caps-word
 Caps word is a feature I came up with a while back that essentially acts as a caps lock key but only for the duration of a "word".
 This makes macros like =CAPS_WORD= really easy to type, it feels a lot like using one shot shift, and it pairs very nicely with it.
 What defines a "word" is sort of up for debate, I started out with a simple check to see if I had hit space or ESC but found that there were other things I wanted to exit on, like punctuation.
@@ -26,7 +25,6 @@ By default caps lock is used as the underlying capitalization method, however yo
 To use this feature =enable_caps_word()= or =toggle_caps_word()= can be called from a macro, combo, tap dance, or whatever else you can think of.
 
 **** X-Case
-#+NAME: x-case
 X-Case is an idea from [[https://github.com/baffalop][@baffalop]], it's takes the idea of caps word but applies it to different kinds of programming cases.
 So for example say you want to type ~my_snake_case_variable~, rather than pressing ~_~ every time (which is almost certainly behind a layer), you can hit a "snake_case" macro that turns all your spaces into underscores, it can then be exited using whatever you define as the end of a word in =terminate_case_mode()=.
 [[https://github.com/baffalop][@baffalop]] also suggested using a double tap space as an exit condition, which is also implemented here.
@@ -92,7 +90,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   #+end_src
 
 - (Optional) Change the mode termination conditions by creating a custom =terminate_case_mode()= function in your keymap.c:
-
   In the below example I've added the macros defined earlier to the terminate function as keycodes to ignore (ie not terminate on).
   #+begin_src C
 // Returns true if the case modes should terminate, false if they continue
@@ -128,4 +125,70 @@ bool terminate_case_modes(uint16_t keycode, const keyrecord_t *record) {
 
 - (Optional) Use shift rather than caps lock in caps word. To do this simply add =#define CAPSWORD_USE_SHIFT= in you config.h.
 
+*** Userspace Leader Sequences
+I don't like the default behavior of QMK's leader key sequences, the timeout based approach is not something I'm used to coming from vim/doom-emacs.
+So I whipped up a quick little userspace version in [[./leader.c][leader.c]]. This version doesn't timeout, but can be escaped using the =LEADER_ESC_KEY= which defaults to =KC_ESC=.
 
+The implementation uses function pointers to carry out the leader sequence logic, which means it only needs to store one pointer, rather than an array of the captured keys.
+This makes it more memory efficient, but also a little more dangerous for the user to implement.
+That being said there is no possibility for infinite loops as long as the =LEADER_ESC_KEY= is accessible on the keyboard.
+
+While this implementation is perhaps a little less user friendly, it's easy to organize your different categories as each one will be it's own function.
+
+I also implemented a =leader_display_str()= function, which returns the an ASCII representation of the current leader sequence.
+This won't be enabled unless you put =#define LEADER_DISPLAY_STR= in your config.h.
+The maximum length of this string defaults to 19, but can be redefined with the =LEADER_DISPLAY_LEN= macro, note that this is the length /excluding/ the null terminator.
+
+**** How it works
+Once a leader sequence has started each keystroke is intercepted, stripped of any mod-taps or hold-taps, and passed to the current =leader_func=.
+The leader function is a function pointer that is passed the current keycode, and will return the pointer to the next leader function, or =NULL= if done with the leader sequence.
+
+The signatures of the these function pointers are defined by =leader_func_t=.
+#+begin_src C
+typedef void *(*leader_func_t)(uint16_t);
+static leader_func_t leader_func = NULL;
+#+end_src
+/Note that I return a void* because otherwise we have an awfully recursive definition./
+
+The entry point to the leader sequence will always be the =leader_start_func=, this can be defined by you in your keymap.c.
+Here's an example:
+#+begin_src C
+void *leader_start_func(uint16_t keycode) {
+    switch (keycode) {
+        case KC_L:
+            return leader_layers_func; // function that will choose new base layers
+        case KC_O:
+            return leader_open_func; // function that opens common applications
+        case KC_T:
+            return leader_toggles_func; // function that toggles keyboard settings
+        case KC_R:
+            reset_keyboard(); // here LDR r will reset the keyboard
+            return NULL; // signal that we're done
+        default:
+            return NULL;
+    }
+}
+#+end_src
+
+The =leader_layers_func= would then look something like this:
+#+begin_src C
+/* --------------- LEADER SEQUENCES --------------- */
+void *leader_layers_func(uint16_t keycode) {
+    switch (keycode) {
+        case KC_C:
+            layer_move(_COLEMAK);
+            break;
+        case KC_R:
+            layer_move(_RSTHD);
+            break;
+        case KC_Q:
+            layer_move(_QWERTY);
+            break;
+        default:
+            break;
+    }
+    return NULL; // this function is always an endpoint
+}
+#+end_src
+
+Similar functions would then exist for =leader_open_func= and =leader_toggles_func=. Of course this is just an example, you can do whatever you want.

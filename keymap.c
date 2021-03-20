@@ -136,9 +136,9 @@ LT(_NAV,KC_SLSH), KC_R,    KC_S, KC_T, KC_H, KC_D,                              
  * ,-------------------------------------------.                              ,-------------------------------------------.
  * |        |      |  !   |  @   |  $   |      |                              |      |  ~   |  =   |  \   |      |        |
  * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |        |  #   |  <   |  -   |  >   |  [   |                              |   |  |  {   |  (   |  )   |  %   |        |
+ * |        |  `   |  <   |  -   |  >   |  #   |                              |   &  |  {   |  (   |  )   |  |   |        |
  * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * |        |      |  +   |  ^   |  *   |  ]   |      |      |  |      |      |   &  |  }   |  `   |  _   |      |        |
+ * |        |      |  +   |  ^   |  *   |  _   |      |      |  |      |      |   %  |  }   |  [   |  ]   |      |        |
  * `----------------------+------+------+------+------+------|  |------+------+------+------+------+----------------------'
  *                        |      |      |      |      |      |  |      |      |      |      |      |
  *                        |      |      |      |      |      |  |      |      |      |      |      |
@@ -146,8 +146,8 @@ LT(_NAV,KC_SLSH), KC_R,    KC_S, KC_T, KC_H, KC_D,                              
  */
     [_SYM] = LAYOUT(
       _______, _______, KC_EXLM, KC_AT,   KC_DLR,  _______,                                     _______, KC_TILD, KC_EQL,  KC_BSLS, _______, _______,
-      _______, KC_HASH, KC_LABK, KC_MINS, KC_RABK, KC_LBRC,                                     KC_PIPE, KC_LCBR, KC_LPRN, KC_RPRN, KC_PERC, _______,
-      _______, _______, KC_PLUS, KC_CIRC, KC_ASTR, KC_RBRC, _______, _______, _______, _______, KC_AMPR, KC_RCBR, KC_GRV,  KC_UNDS, _______, _______,
+      _______, KC_GRV,  KC_LABK, KC_MINS, KC_RABK, KC_HASH,                                     KC_AMPR, KC_LCBR, KC_LPRN, KC_RPRN, KC_PIPE, _______,
+      _______, _______, KC_PLUS, KC_CIRC, KC_ASTR, KC_UNDS, _______, _______, _______, _______, KC_PERC, KC_RCBR, KC_LBRC, KC_RBRC, _______, _______,
                                  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 /*
@@ -236,6 +236,15 @@ LT(_NAV,KC_SLSH), KC_R,    KC_S, KC_T, KC_H, KC_D,                              
 #ifndef MY_SPLIT_RIGHT
 
 /* --------------- PROCESS RECORD --------------- */
+
+bool use_default_xcase_separator(uint16_t keycode, const keyrecord_t *record) {
+    switch (keycode) {
+        case KC_A ... KC_Z:
+        case KC_1 ... KC_0:
+            return true;
+    }
+    return false;
+}
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // Process case modes

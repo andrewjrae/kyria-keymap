@@ -340,6 +340,7 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
 /* --------------- LEADER SEQUENCES --------------- */
 void *leader_layers_func(uint16_t keycode) {
     switch (keycode) {
+        // swap to the different layers, non-persisently, cause RTSHD is life
         case KC_A:
             layer_move(_ATHEX);
             break;
@@ -355,11 +356,13 @@ void *leader_layers_func(uint16_t keycode) {
     return NULL;
 }
 
-
 void *leader_start_func(uint16_t keycode) {
     switch (keycode) {
         case KC_L:
-            return leader_layers_func;
+            return leader_layers_func; // function to swap between my layers
+        case KC_R:
+            reset_keyboard(); // here LDR r will reset the keyboard
+            return NULL; // signal that we're done
         default:
             return NULL;
     }

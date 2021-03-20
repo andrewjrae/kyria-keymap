@@ -75,6 +75,7 @@ void start_leading(void) {
     leading = true;
     leader_func = leader_start_func;
 #ifdef LEADER_DISPLAY_STR
+    memset(leader_display, 0, sizeof(leader_display));
     leader_display[0] = 'L';
     leader_display[1] = 'D';
     leader_display[2] = 'R';
@@ -87,8 +88,7 @@ void stop_leading(void) {
     leading = false;
     leader_func = NULL;
 #ifdef LEADER_DISPLAY_STR
-    leader_display_size = 0;
-    memset(leader_display, 0, sizeof(leader_display));
+    leader_display[leader_display_size] = ' ';
 #endif
 }
 
@@ -113,16 +113,15 @@ bool process_leader(uint16_t keycode, const keyrecord_t *record) {
             stop_leading();
             return false;
         }
+
+#ifdef LEADER_DISPLAY_STR
+        update_leader_display(keycode);
+#endif
         // update the leader function
         leader_func = leader_func(keycode);
         if (leader_func == NULL) {
             stop_leading();
         }
-#ifdef LEADER_DISPLAY_STR
-        else {
-            update_leader_display(keycode);
-        }
-#endif
         return false;
     }
     return true;

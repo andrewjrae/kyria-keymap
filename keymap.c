@@ -428,8 +428,19 @@ static void render_status(void) {
             oled_write_P(PSTR("Undefined\n\n"), false);
     }
 #ifdef LEADER_DISPLAY_STR
-    oled_write_ln(leader_display_str(), false);
-#endif // end leader enable
+    static uint16_t timer = 0;
+    if (is_leading()) {
+        oled_write_ln(leader_display_str(), false);
+        timer = timer_read();
+    }
+    else if (timer_elapsed(timer) < 200){
+        oled_write_ln(leader_display_str(), false);
+    }
+    else {
+        oled_write_ln("", false);
+    }
+
+#    endif  // end leader enable
 }
 
 void oled_task_user(void) {

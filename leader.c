@@ -26,26 +26,33 @@ static bool leading = false;
 static leader_func_t leader_func = NULL;
 
 #ifdef LEADER_DISPLAY_STR
+
+#ifndef LEADER_DISPLAY_LEN
+#define LEADER_DISPLAY_LEN 19
+#endif
+
 static const char keycode_to_ascii_lut[58] = {0, 0, 0, 0, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0', 0, 0, 0, '\t', ' ', '-', '=', '[', ']', '\\', 0, ';', '\'', '`', ',', '.', '/'};
 
 static uint8_t leader_display_size;
 static const char space_ascii[] = "SPC";
-static char leader_display[20];
+static char leader_display[LEADER_DISPLAY_LEN + 1]; // add space for null terminator
 
-void update_leader_display(uint16_t keycode) {
+static void update_leader_display(uint16_t keycode) {
     leader_display[leader_display_size] = ' ';
     ++leader_display_size;
-    switch (keycode) {
-        case KC_SPC:
-            memcpy(leader_display+leader_display_size, space_ascii, sizeof(space_ascii));
-            leader_display_size += sizeof(space_ascii);
-            break;
-        default:
-            leader_display[leader_display_size] = keycode_to_ascii_lut[keycode];
-            ++leader_display_size;
-            break;
+    if (leader_display_size < LEADER_DISPLAY_LEN) {
+        switch (keycode) {
+            case KC_SPC:
+                memcpy(leader_display + leader_display_size, space_ascii, sizeof(space_ascii));
+                leader_display_size += sizeof(space_ascii);
+                break;
+            default:
+                leader_display[leader_display_size] = keycode_to_ascii_lut[keycode];
+                ++leader_display_size;
+                break;
+        }
+        leader_display[leader_display_size] = '-';
     }
-    leader_display[leader_display_size] = '-';
 }
 
 char *leader_display_str(void) {

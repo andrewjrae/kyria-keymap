@@ -236,6 +236,15 @@ LT(_NAV,KC_SLSH), KC_R,    KC_S, KC_T, KC_H, KC_D,                              
 
 /* --------------- PROCESS RECORD --------------- */
 
+bool use_default_xcase_separator(uint16_t keycode, const keyrecord_t *record) {
+    switch (keycode) {
+        case KC_A ... KC_Z:
+        case KC_1 ... KC_0:
+            return true;
+    }
+    return false;
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // Process case modes
     if (!process_case_modes(keycode, record)) {

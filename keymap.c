@@ -15,8 +15,8 @@
  */
 #include QMK_KEYBOARD_H
 #include <string.h>
-#include "casemodes.h"
-#include "leader.h"
+#include "features/casemodes.h"
+#include "features/leader.h"
 
 #ifdef MY_SPLIT_RIGHT
 #endif

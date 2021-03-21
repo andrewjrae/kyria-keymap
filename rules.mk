@@ -11,8 +11,8 @@ GRAVE_ESC_ENABLE = no
 ENCODER_ENABLE = no       # Enables the use of one or more encoders
 RGBLIGHT_ENABLE = no      # Enable keyboard RGB underglow
 
-SRC += casemodes.c
-SRC += leader.c
+SRC += features/casemodes.c
+SRC += features/leader.c
 
 # If flashing the right side
 RIGHT = 0

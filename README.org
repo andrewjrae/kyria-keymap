@@ -21,7 +21,7 @@ To understand my thought process you can read my [[./logs.org][Keymap Logs]].
 
 * Features
 ** Case Modes
-Case modes is a feature that implements different case handling modes, [[#caps-word][Caps Word]], and [[#x-case][X-Case]]. See [[./casemodes.c][casemodes.c]] for implementation details.
+Case modes is a feature that implements different case handling modes, [[#caps-word][Caps Word]], and [[#x-case][X-Case]]. See [[./features/casemodes.c][features/casemodes.c]] for implementation details.
 
 Also I'd like to shout out the [[https://splitkb.com][splitkb.com]] discord users for all their input and ideas with this feature.
 
@@ -56,7 +56,7 @@ Note that =terminate_case_mode()= also determines the stop conditions for x-case
 It should also not that if you want some thing like SCREAMING_SNAKE_CASE, you just have to enable caps word and xcase (in either order).
 
 *** Configuration / Usage
-+ Add [[./casemodes.c][casemodes.c]] to your ~SRCS~ by calling adding ~SRC += casemodes.c~ to your rules.mk.
++ Add [[./features/casemodes.c][features/casemodes.c]] to your ~SRCS~ by calling adding ~SRC += features/casemodes.c~ to your rules.mk.
 + Add =process_case_modes()= to your =process_record_user()=, it can either go at the top or the bottom, it depends on how you want it to interact with your keycodes.
 
   If you process at the beginning it will look something like this, make sure that you return false when =process_case_modes= returns false.
@@ -140,7 +140,7 @@ bool terminate_case_modes(uint16_t keycode, const keyrecord_t *record) {
 
 ** Userspace Leader Sequences
 I don't like the default behavior of QMK's leader key sequences, the timeout based approach is not something I'm used to coming from vim/doom-emacs.
-So I whipped up a quick little userspace version in [[./leader.c][leader.c]]. This version doesn't timeout, but can be escaped using the =LEADER_ESC_KEY= which defaults to =KC_ESC=.
+So I whipped up a quick little userspace version in [[./features/leader.c][features/leader.c]]. This version doesn't timeout, but can be escaped using the =LEADER_ESC_KEY= which defaults to =KC_ESC=.
 
 The implementation uses function pointers to carry out the leader sequence logic, which means it only needs to store one pointer, rather than an array of the captured keys.
 This makes it more memory efficient, but also a little more dangerous for the user to implement.
@@ -205,7 +205,7 @@ void *leader_layers_func(uint16_t keycode) {
 Similar functions would then exist for =leader_open_func= and =leader_toggles_func=. Of course this is just an example, you can do whatever you want.
 
 *** Configuration
-+ Add [[./leader.c][leader.c]] to your ~SRCS~ by calling adding ~SRC += leader.c~ to your rules.mk.
++ Add [[./features/leader.c][features/leader.c]] to your ~SRCS~ by calling adding ~SRC += features/leader.c~ to your rules.mk.
 + Add =process_leader()= to your =process_record_user()=, this /must/ go at the top of your =process_record_user()= if you have made a macro for the leader key that triggers on press.
   This is because it will attempt to be processed as part of the sequence.
   To get around this you could also just make your macro trigger on release rather than on press.
@@ -252,4 +252,4 @@ void oled_task_user(void) {
     else {                                          \
         oled_write_ln("", false);                   \
     }
- #+end_src
+#+end_src

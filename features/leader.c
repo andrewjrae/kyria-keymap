@@ -47,7 +47,12 @@ static void update_leader_display(uint16_t keycode) {
                 leader_display_size += sizeof(space_ascii);
                 break;
             default:
-                leader_display[leader_display_size] = keycode_to_ascii_lut[keycode];
+                if (keycode < sizeof(keycode_to_ascii_lut)) {
+                    leader_display[leader_display_size] = keycode_to_ascii_lut[keycode];
+                }
+                else {
+                    leader_display[leader_display_size] = '?';
+                }
                 ++leader_display_size;
                 break;
         }
@@ -107,6 +112,11 @@ bool process_leader(uint16_t keycode, const keyrecord_t *record) {
                 break;
             default:
                 break;
+        }
+
+        // let through anything above that's normal keyboard keycode or a mod
+        if (keycode > QK_MODS_MAX || IS_MOD(keycode)) {
+            return true;
         }
         // early exit if the esc key was hit
         if (keycode == LEADER_ESC_KEY) {

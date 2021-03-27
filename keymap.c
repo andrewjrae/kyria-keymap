@@ -17,13 +17,13 @@
 #include <string.h>
 #include "features/casemodes.h"
 #include "features/leader.h"
+#include "qmk-vim/vim.h"
 
 #ifdef MY_SPLIT_RIGHT
 #endif
 
 enum layers {
     _RSTHD = 0,
-    _ATHEX,
     _QWERTY,
     _NAV,
     _NUM,
@@ -89,26 +89,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 LT(_NAV,KC_SLSH), KC_R,    KC_S, KC_T, KC_H, KC_D,                                     KC_L, KC_N, KC_A,    KC_I,    KC_O,    KC_SCLN,
         CAPSWRD,  MY_LSFT, KC_V, KC_G, KC_K, KC_B, LEADER,  _______, _______, LEADER,  KC_W, KC_J, KC_COMM, KC_DOT,  MY_RSFT, KC_MINS,
                         _______, KC_LGUI, KC_ESC, RST_SPC, RST_ENT, MY_BSPC, RST_E, RST_TAB, KC_RGUI, _______
-    ),
-/*
- * Alpha Layer: ATHEX a modified THE-1 for better vim usage and personal comfort
- *
- * ,-------------------------------------------.                              ,-------------------------------------------.
- * |  Tab   |   Z  |   M  |   L  |   U  | .  > |                              |   V  |   D  |   R  | '  " |   Q  | \  |   |
- * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
- * |Esc/NAV |   A  |   T  |   H  |   E  |   X  |                              |   C  |   S  |   N  |   O  |   I  | ;  :   |
- * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
- * | LShift | /  ? |   P  |   F  |   K  | ,  < |Leader|      |  |      |Leader|   G  |   J  |   W  |   B  |   Y  | -  _   |
- * `----------------------+------+------+------+------+ Enter|  | Bksp +------+------+------+------+----------------------'
- *                        | ???  | GUI  | Esc  | OSM  | NUM  |  | SYM  | Space| Tab  | GUI  | ???  |
- *                        |      |      | Alt  | Shift|      |  |      | NAV  | Ctrl |      |      |
- *                        `----------------------------------'  `----------------------------------'
- */
-    [_ATHEX] = MY_ALPHA_LAYOUT(
-        KC_Z,    KC_M,   KC_L,   KC_U,   KC_DOT,        KC_V,   KC_D,   KC_R,   KC_QUOT, KC_Q,
-        KC_A,    KC_T,   KC_H,   KC_E,   KC_X,          KC_C,   KC_S,   KC_N,   KC_O,    KC_I, KC_SCLN,
-        KC_SLSH, KC_P,   KC_F,   KC_K,   KC_COMM,       KC_G,   KC_J,   KC_W,   KC_B,    KC_Y,
-        MY_LSFT
     ),
 /*
  * Alpha Layer: QWERTY
@@ -257,6 +237,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
     }
 
+    // Process vim mode
+    if (!process_vim_mode(keycode, record)) {
+        return false;
+    }
+
     // Regular user keycode case statement
     switch (keycode) {
         case CAPSWRD:
@@ -342,9 +327,6 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
 void *leader_layers_func(uint16_t keycode) {
     switch (keycode) {
         // swap to the different layers, non-persisently, cause RTSHD is life
-        case KC_A:
-            layer_move(_ATHEX);
-            break;
         case KC_R:
             layer_move(_RSTHD);
             break;
@@ -357,10 +339,23 @@ void *leader_layers_func(uint16_t keycode) {
     return NULL;
 }
 
+void *leader_toggles_func(uint16_t keycode) {
+    switch (keycode) {
+        case KC_V:
+            toggle_vim_mode();
+            break;
+        default:
+            break;
+    }
+    return NULL;
+}
+
 void *leader_start_func(uint16_t keycode) {
     switch (keycode) {
         case KC_L:
             return leader_layers_func; // function to swap between my layers
+        case KC_T:
+            return leader_toggles_func; // function to swap between my layers
         case KC_R:
             reset_keyboard(); // here LDR r will reset the keyboard
             return NULL; // signal that we're done
@@ -407,26 +402,29 @@ static void render_status(void) {
     // Host Keyboard Layer Status
     oled_write_P(PSTR("Layer: "), false);
     switch (get_highest_layer(layer_state)) {
-        case _ATHEX:
-            oled_write_P(PSTR("ATHEX\n\n"), false);
-            break;
         case _RSTHD:
-            oled_write_P(PSTR("RSTHD v4\n\n"), false);
+            oled_write_P(PSTR("RSTHD"), false);
             break;
         case _QWERTY:
-            oled_write_P(PSTR("QWERTY\n\n"), false);
+            oled_write_P(PSTR("QWERTY"), false);
             break;
         case _NAV:
-            oled_write_P(PSTR("Navigation\n\n"), false);
+            oled_write_P(PSTR("Navigation"), false);
             break;
         case _NUM:
-            oled_write_P(PSTR("Numbers\n\n"), false);
+            oled_write_P(PSTR("Numbers"), false);
             break;
         case _SYM:
-            oled_write_P(PSTR("Symbols\n\n"), false);
+            oled_write_P(PSTR("Symbols"), false);
             break;
         default:
-            oled_write_P(PSTR("Undefined\n\n"), false);
+            oled_write_P(PSTR("Undefined"), false);
+    }
+    if (vim_mode_enabled()) {
+        oled_write_P(PSTR(" - vim\n\n"), false);
+    }
+    else {
+        oled_write_P(PSTR("\n\n"), false);
     }
 #ifdef LEADER_DISPLAY_STR
     OLED_LEADER_DISPLAY();

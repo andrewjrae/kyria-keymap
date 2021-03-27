@@ -13,7 +13,7 @@ RGBLIGHT_ENABLE = no      # Enable keyboard RGB underglow
 
 SRC += features/casemodes.c
 SRC += features/leader.c
-SRC += qmk-vim/vim.c
+include $(KEYBOARD_PATH_2)/keymaps/$(KEYMAP)/qmk-vim/rules.mk
 
 # If flashing the right side
 RIGHT = 0

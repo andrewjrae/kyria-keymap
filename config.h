@@ -30,6 +30,7 @@
 // Save firmware space
 #undef LOCKING_SUPPORT_ENABLE
 #undef LOCKING_RESYNC_ENABLE
+#define LAYER_STATE_8BIT
 
 // Enable eeprom hand definitions
 #define EE_HANDS
@@ -39,6 +40,9 @@
 
 // Leader key settings
 #define LEADER_DISPLAY_STR
+
+// Vim mode settings
+#define BETTER_VISUAL_MODE // takes more space but behaves more like vim
 
 // Combo settings
 #define COMBO_COUNT 4

@@ -43,7 +43,9 @@
 
 // Vim mode settings
 #define USE_VIM // comment this out to disable vim
-/* #define BETTER_VISUAL_MODE // takes more space but behaves more like vim */
+#define BETTER_VISUAL_MODE // takes more space but behaves more like vim
+#define VIM_TEXT_OBJECTS
+#define VIM_G_MOTIONS
 
 // Combo settings
 #define COMBO_COUNT 4

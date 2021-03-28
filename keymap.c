@@ -17,7 +17,10 @@
 #include <string.h>
 #include "features/casemodes.h"
 #include "features/leader.h"
+
+#ifdef USE_VIM
 #include "qmk-vim/vim.h"
+#endif
 
 #ifdef MY_SPLIT_RIGHT
 #endif
@@ -237,10 +240,12 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
         return false;
     }
 
+#ifdef USE_VIM
     // Process vim mode
     if (!process_vim_mode(keycode, record)) {
         return false;
     }
+#endif
 
     // Regular user keycode case statement
     switch (keycode) {
@@ -342,7 +347,9 @@ void *leader_layers_func(uint16_t keycode) {
 void *leader_toggles_func(uint16_t keycode) {
     switch (keycode) {
         case KC_V:
+#ifdef USE_VIM
             toggle_vim_mode();
+#endif
             break;
         default:
             break;
@@ -420,12 +427,19 @@ static void render_status(void) {
         default:
             oled_write_P(PSTR("Undefined"), false);
     }
-    if (vim_mode_enabled()) {
-        oled_write_P(PSTR(" - vim\n\n"), false);
-    }
-    else {
-        oled_write_P(PSTR("\n\n"), false);
-    }
+    oled_write_P(PSTR("\n\n"), false);
+
+/* #ifdef USE_VIM */
+/*     if (vim_mode_enabled()) { */
+/*         oled_write_P(PSTR(" - vim\n\n"), false); */
+/*     } */
+/*     else { */
+/*         oled_write_P(PSTR("\n\n"), false); */
+/*     } */
+/* #else */
+/*     oled_write_P(PSTR("\n\n"), false); */
+/* #endif */
+
 #ifdef LEADER_DISPLAY_STR
     OLED_LEADER_DISPLAY();
 #endif

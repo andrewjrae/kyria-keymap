@@ -42,7 +42,8 @@
 #define LEADER_DISPLAY_STR
 
 // Vim mode settings
-#define BETTER_VISUAL_MODE // takes more space but behaves more like vim
+#define USE_VIM // comment this out to disable vim
+/* #define BETTER_VISUAL_MODE // takes more space but behaves more like vim */
 
 // Combo settings
 #define COMBO_COUNT 4

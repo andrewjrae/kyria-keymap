@@ -19,7 +19,7 @@
 #include "features/leader.h"
 
 #ifdef USE_VIM
-#include "qmk-vim/vim.h"
+#include "qmk-vim/src/vim.h"
 #endif
 
 #ifdef MY_SPLIT_RIGHT

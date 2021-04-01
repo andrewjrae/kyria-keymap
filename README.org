@@ -1,7 +1,10 @@
 #+TITLE: Kyria Keymap
 #+OPTIONS: ^:nil
 
+This keymap has a RSTHD-based alpha layer and lots of fun features.
+
 [[images/kyria.png]]
+/*This image may be out of date in relation to the code./
 
 * Table of Contents :TOC_3:noexport:
 - [[#about][About]]

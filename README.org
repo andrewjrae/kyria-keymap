@@ -1,6 +1,8 @@
 #+TITLE: Kyria Keymap
 #+OPTIONS: ^:nil
 
+[[images/kyria.png]]
+
 * Table of Contents :TOC_3:noexport:
 - [[#about][About]]
 - [[#features][Features]]
@@ -18,8 +20,6 @@ This is my QMK Kyria keymap, it has some nifty features and an interesting base 
 
 The base alpha layer I use is a modified RSTHD, which has some /interesting/ (perhaps dubious), choices.
 To understand my thought process you can read my [[./logs.org][Keymap Logs]].
-
-[[images/kyria.png]]
 
 * Features
 ** Case Modes

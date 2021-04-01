@@ -19,6 +19,8 @@ This is my QMK Kyria keymap, it has some nifty features and an interesting base 
 The base alpha layer I use is a modified RSTHD, which has some /interesting/ (perhaps dubious), choices.
 To understand my thought process you can read my [[./logs.org][Keymap Logs]].
 
+[[file:images/kyria.png][keymap]]
+
 * Features
 ** Case Modes
 Case modes is a feature that implements different case handling modes, [[#caps-word][Caps Word]], and [[#x-case][X-Case]]. See [[./features/casemodes.c][features/casemodes.c]] for implementation details.

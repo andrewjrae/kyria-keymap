@@ -43,8 +43,11 @@
 
 // Vim mode settings
 #define USE_VIM // comment this out to disable vim
+/* #define NO_VISUAL_MODE */
+/* #define NO_VISUAL_LINE_MODE */
 #define BETTER_VISUAL_MODE // takes more space but behaves more like vim
-#define VIM_TEXT_OBJECTS
+#define VIM_I_TEXT_OBJECTS
+#define VIM_A_TEXT_OBJECTS
 #define VIM_G_MOTIONS
 #define VIM_COLON_CMDS
 #define VIM_PASTE_BEFORE

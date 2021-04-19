@@ -24,6 +24,7 @@
 
 #ifdef USE_VIM
 #include "qmk-vim/src/vim.h"
+#include "qmk-vim/src/modes.h"
 #endif
 
 
@@ -374,6 +375,17 @@ void *leader_start_func(uint16_t keycode) {
     return NULL;
 }
 #endif // end is not right side
+
+#ifdef USE_VIM
+bool process_insert_mode_user(uint16_t keycode, const keyrecord_t *record) {
+    if (record->event.pressed && keycode == LCTL(KC_S)) {
+        normal_mode();
+        tap_code16(keycode);
+        return false;
+    }
+    return true;
+}
+#endif
 
 #ifdef OLED_DRIVER_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {

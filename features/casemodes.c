@@ -111,28 +111,21 @@ void disable_xcase(void) {
 
 // Place the current xcase delimiter
 static void place_delimiter(void) {
-    switch (xcase_delimiter) {
-        case QK_ONE_SHOT_MOD ... QK_ONE_SHOT_MOD_MAX: {
-            // apparently set_oneshot_mods() is dumb and doesn't deal with handedness for you
-            uint8_t mods = xcase_delimiter & 0x10 ? (xcase_delimiter & 0x0F) << 4 : xcase_delimiter & 0xFF;
-            set_oneshot_mods(mods);
-            break;
-        }
-        default:
-            tap_code16(xcase_delimiter);
-            break;
+    if (IS_OSM(xcase_delimiter)) {
+        // apparently set_oneshot_mods() is dumb and doesn't deal with handedness for you
+        uint8_t mods = xcase_delimiter & 0x10 ? (xcase_delimiter & 0x0F) << 4 : xcase_delimiter & 0xFF;
+        set_oneshot_mods(mods);
+    } else {
+        tap_code16(xcase_delimiter);
     }
 }
 
 // Removes a delimiter, used for double tap space exit
 static void remove_delimiter(void) {
-    switch (xcase_delimiter) {
-        case QK_ONE_SHOT_MOD ... QK_ONE_SHOT_MOD_MAX:
-            clear_oneshot_mods();
-            break;
-        default:
-            tap_code(KC_BSPC);
-            break;
+    if (IS_OSM(xcase_delimiter)) {
+        clear_oneshot_mods();
+    } else {
+        tap_code(KC_BSPC);
     }
 }
 
@@ -175,14 +168,17 @@ bool use_default_xcase_separator(uint16_t keycode, const keyrecord_t *record) {
 
 bool process_case_modes(uint16_t keycode, const keyrecord_t *record) {
     if (caps_word_on || xcase_state) {
-        switch (keycode) {
-            case QK_MOD_TAP ... QK_MOD_TAP_MAX:
-            case QK_LAYER_TAP ... QK_LAYER_TAP_MAX:
-            case QK_TAP_DANCE ... QK_TAP_DANCE_MAX:
-                if (record->tap.count == 0)
-                    return true;
-                keycode = keycode & 0xFF;
-                break;
+        if ((QK_MOD_TAP <= keycode && keycode <= QK_MOD_TAP_MAX)
+            || (QK_LAYER_TAP <= keycode && keycode <= QK_LAYER_TAP_MAX)) {
+            // Earlier return if this has not been considered tapped yet
+            if (record->tap.count == 0)
+                return true;
+            keycode = keycode & 0xFF;
+        }
+
+        if (keycode > QK_MODS_MAX || IS_MOD(keycode)) {
+            // let special keys and normal modifiers go through
+            return true;
         }
 
         if (xcase_state == XCASE_WAIT) {
@@ -191,21 +187,14 @@ bool process_case_modes(uint16_t keycode, const keyrecord_t *record) {
                 enable_xcase_with(DEFAULT_XCASE_SEPARATOR);
             }
             else if (record->event.pressed) {
-                if (keycode > QK_MODS_MAX || IS_MOD(keycode)) {
-                    // let special keys and normal modifiers go through
-                    return true;
+                // factor in mods
+                if (get_mods() & MOD_MASK_SHIFT) {
+                    keycode = LSFT(keycode);
                 }
-                else {
-                    // factor in mods
-                    if (get_mods() & MOD_MASK_SHIFT) {
-                        keycode = LSFT(keycode);
-                    }
-                    else if (get_mods() & MOD_BIT(KC_RALT)) {
-                        keycode = RALT(keycode);
-                    }
-                    enable_xcase_with(keycode);
-                    return false;
+                else if (get_mods() & MOD_BIT(KC_RALT)) {
+                    keycode = RALT(keycode);
                 }
+                enable_xcase_with(keycode);
                 return false;
             }
             else {

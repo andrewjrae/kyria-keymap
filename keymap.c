@@ -580,7 +580,36 @@ static void render_status(void) {
 /* #endif */
 
 #ifdef LEADER_DISPLAY_STR
-    OLED_LEADER_DISPLAY();
+    static uint16_t timer = 0;
+    if (is_leading()) {
+        oled_write_ln(leader_display_str(), false);
+        timer = timer_read();
+    }
+    else if (vim_mode_enabled()) {
+        switch (get_vim_mode()) {
+            case NORMAL_MODE:
+                oled_write_P(PSTR("-- NORMAL --\n"), false);
+                break;
+            case INSERT_MODE:
+                oled_write_P(PSTR("-- INSERT --\n"), false);
+                break;
+            case VISUAL_MODE:
+                oled_write_P(PSTR("-- VISUAL --\n"), false);
+                break;
+            case VISUAL_LINE_MODE:
+                oled_write_P(PSTR("-- VISUAL LINE --\n"), false);
+                break;
+            default:
+                oled_write_P(PSTR("?????\n"), false);
+                break;
+        }
+    }
+    else if (timer_elapsed(timer) < 175){
+        oled_write_ln(leader_display_str(), false);
+    } else {
+        timer = timer_read() - 200; // prevent it from ever looping around
+        oled_write_ln("", false);
+    }
 #endif
 }
 #endif

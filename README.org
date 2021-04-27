@@ -84,7 +84,7 @@ Note that =terminate_case_mode()= also determines the stop conditions for x-case
 
 It should also be noted that if you want some thing like SCREAMING_SNAKE_CASE, you just have to enable caps word and xcase (in either order).
 
-[[https://github.com/mihaiolteanu][@mihaiolteanu]]] also made an elisp implementation for Emacs in this [[https://github.com/andrewjrae/kyria-keymap/issues/1][ticket]] which is super nifty!
+[[https://github.com/mihaiolteanu][@mihaiolteanu]] also made an elisp implementation for Emacs in this [[https://github.com/andrewjrae/kyria-keymap/issues/1][ticket]] which is super nifty!
 
 *** Configuration / Usage
 + Add [[./features/casemodes.c][features/casemodes.c]] to your ~SRCS~ by calling adding ~SRC += features/casemodes.c~ to your rules.mk.

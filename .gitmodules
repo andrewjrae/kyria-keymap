@@ -1,0 +1,3 @@
+[submodule "vim"]
+	path = qmk-vim
+	url = git@github.com:andrewjrae/qmk-vim.git

@@ -30,6 +30,7 @@
 // Save firmware space
 #undef LOCKING_SUPPORT_ENABLE
 #undef LOCKING_RESYNC_ENABLE
+#define LAYER_STATE_8BIT
 
 // Enable eeprom hand definitions
 #define EE_HANDS
@@ -39,6 +40,20 @@
 
 // Leader key settings
 #define LEADER_DISPLAY_STR
+
+// Vim mode settings
+#define USE_VIM // comment this out to disable vim
+/* #define VIM_FOR_MAC */
+/* #define NO_VISUAL_MODE */
+/* #define NO_VISUAL_LINE_MODE */
+#define BETTER_VISUAL_MODE // takes more space but behaves more like vim
+#define VIM_I_TEXT_OBJECTS
+#define VIM_A_TEXT_OBJECTS
+#define VIM_G_MOTIONS
+#define VIM_COLON_CMDS
+#define VIM_PASTE_BEFORE
+#define VIM_REPLACE
+#define VIM_DOT_REPEAT
 
 // Combo settings
 #define COMBO_COUNT 4

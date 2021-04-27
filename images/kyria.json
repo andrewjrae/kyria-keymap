@@ -1,0 +1,342 @@
+[
+  {
+    "backcolor": "#ffffff",
+    "name": "Kyria"
+  },
+  [
+    {
+      "y": 0.25,
+      "x": 3,
+      "c": "#5B6268",
+      "t": "#000000\n#51afef\n#c678dd\n#98be65"
+    },
+    "Y\n<i class='fa fa-copy'></i>\n-\n@",
+    {
+      "x": 9
+    },
+    "'\n\n=\n="
+  ],
+  [
+    {
+      "y": -0.75,
+      "x": 2,
+      "fa": [
+        4
+      ]
+    },
+    "C\n\n<\n!",
+    {
+      "x": 1
+    },
+    "F\n\n>\n$",
+    {
+      "x": 7,
+      "t": "#000000\n#51afef\n\n#98be65"
+    },
+    "M\n\n\n~",
+    {
+      "x": 1
+    },
+    "U\n<i class='fa fa-undo'></i>\n\n\\"
+  ],
+  [
+    {
+      "y": -0.875,
+      "x": 5,
+      "t": "#000000\n#51afef"
+    },
+    "P\n<i class='fa fa-paste'></i>",
+    {
+      "x": 5
+    },
+    "X"
+  ],
+  [
+    {
+      "y": -0.625,
+      "t": "#000000",
+      "a": 7
+    },
+    "",
+    {
+      "t": "#000000\n#51afef",
+      "a": 4
+    },
+    "Z",
+    {
+      "x": 13
+    },
+    "Q",
+    {
+      "t": "#000000",
+      "a": 7
+    },
+    ""
+  ],
+  [
+    {
+      "y": -0.75,
+      "x": 3,
+      "t": "#000000\n#51afef\n#c678dd\n#98be65",
+      "a": 4
+    },
+    "T\n<i class='kb kb-Multimedia-Play-Pause'></i>\n1\n-\nCTRL",
+    {
+      "x": 9,
+      "fa": [
+        4,
+        2
+      ]
+    },
+    "A\n<i class='fa fa-arrow-up'></i>\n7\n(\nCTRL"
+  ],
+  [
+    {
+      "y": -0.75,
+      "x": 2,
+      "fa": [
+        4,
+        1
+      ]
+    },
+    "S\n<i class='fa fa-fast-forward'></i>\n2\n<\nGUI",
+    {
+      "x": 1,
+      "fa": [
+        4
+      ]
+    },
+    "H\n<i class='fa fa-volume-up'></i>\n0\n>\nSHIFT",
+    {
+      "x": 7,
+      "fa": [
+        4,
+        2
+      ]
+    },
+    "N\n<i class='fa fa-arrow-down'></i>\n6\n{\nSHIFT",
+    {
+      "x": 1
+    },
+    "I\n<i class='fa fa-arrow-right'></i>\n8\n)\nGUI"
+  ],
+  [
+    {
+      "y": -0.875,
+      "x": 5,
+      "fa": [
+        4
+      ]
+    },
+    "D\n<i class='mss mss-Unicode-DeleteRight-Big-2'></i>\n4\n`",
+    {
+      "x": 5,
+      "fa": [
+        4,
+        2
+      ]
+    },
+    "L\n<i class='fa fa-arrow-left'></i>\n5\n&"
+  ],
+  [
+    {
+      "y": -0.625,
+      "t": "#000000\n#51afef"
+    },
+    "/",
+    {
+      "t": "#000000\n#51afef\n#c678dd\n#98be65"
+    },
+    "R\n\n3\n#\nALT",
+    {
+      "x": 13
+    },
+    "O\n\n9\n|\nALT",
+    {
+      "t": "#000000\n#51afef"
+    },
+    ";"
+  ],
+  [
+    {
+      "y": -0.75,
+      "x": 3,
+      "t": "#000000\n#51afef\n#c678dd\n#98be65",
+      "fa": [
+        4
+      ]
+    },
+    "G\n<i class='kb kb-Multimedia-Mute-2'></i>\n^\n^",
+    {
+      "x": 9,
+      "t": "#000000\n#51afef\n\n#98be65"
+    },
+    ",\n<i class='kb kb-Arrows-Top-4'></i>\n\n["
+  ],
+  [
+    {
+      "y": -0.75,
+      "x": 2,
+      "t": "#000000\n#51afef\n#c678dd\n#98be65",
+      "fa": [
+        4,
+        1
+      ]
+    },
+    "V\n<i class='fa fa-fast-backward'></i>\n+\n+",
+    {
+      "x": 1,
+      "fa": [
+        4
+      ]
+    },
+    "K\n<i class='fa fa-volume-down'></i>\n*\n*",
+    {
+      "x": 7,
+      "t": "#000000\n#51afef\n\n#98be65"
+    },
+    "J\n<i class='kb kb-Arrows-Bottom-4'></i>\n\n}",
+    {
+      "x": 1
+    },
+    ".\n<i class='fa fa-long-arrow-right'></i>\n\n]"
+  ],
+  [
+    {
+      "y": -0.875,
+      "x": 5
+    },
+    "B\n\n\n_",
+    {
+      "x": 5
+    },
+    "W\n<i class='fa fa-long-arrow-left'></i>\n\n%"
+  ],
+  [
+    {
+      "y": -0.625,
+      "t": "#000000\n#51afef"
+    },
+    "CAPS\n\n\n\n\n\nWORD",
+    "OSS",
+    {
+      "x": 13
+    },
+    "OSS",
+    {
+      "fa": [
+        4
+      ]
+    },
+    "-"
+  ],
+  [
+    {
+      "y": -0.5,
+      "x": 2.5,
+      "t": "#000000",
+      "a": 7
+    },
+    "",
+    {
+      "x": 10
+    },
+    ""
+  ],
+  [
+    {
+      "rx": 4,
+      "ry": 8.175,
+      "y": -4.675000000000001,
+      "x": -0.5
+    },
+    ""
+  ],
+  [
+    {
+      "rx": 13,
+      "y": -4.675000000000001,
+      "x": -0.5
+    },
+    ""
+  ],
+  [
+    {
+      "r": 15,
+      "rx": 4,
+      "y": -4.675000000000001,
+      "x": -0.5,
+      "t": "#000000\n#51afef",
+      "a": 4
+    },
+    "ESC"
+  ],
+  [
+    {
+      "r": 30,
+      "y": -2,
+      "x": -0.5
+    },
+    "LDR"
+  ],
+  [
+    {
+      "x": -0.5,
+      "t": "#000000\n#51afef\n\n\n#51afef"
+    },
+    "SPC\n\n\n\nNAV"
+  ],
+  [
+    {
+      "r": 45,
+      "y": -2,
+      "x": -0.5,
+      "t": "#000000\n\n\n\n#98be65",
+      "a": 7,
+      "fa": [
+        4
+      ],
+      "h": 2
+    },
+    "<i class='kb kb-Return-2'></i>\n\n\n\nSYM"
+  ],
+  [
+    {
+      "r": -45,
+      "rx": 13,
+      "y": -5.675000000000001,
+      "x": -0.5,
+      "h": 2
+    },
+    "<i class='kb kb-Unicode-BackSpace-DeleteLeft-Big'></i>\n\n\n\nSYM"
+  ],
+  [
+    {
+      "r": -30,
+      "y": -1,
+      "x": -0.5,
+      "t": "#000000\n#51afef",
+      "a": 4
+    },
+    "LDR"
+  ],
+  [
+    {
+      "x": -0.5,
+      "t": "#000000\n#51afef\n\n\n#c678dd",
+      "fa": [
+        4
+      ]
+    },
+    "E\n\n\n\nNUM"
+  ],
+  [
+    {
+      "r": -15,
+      "y": -1,
+      "x": -0.5,
+      "t": "#000000\n#51afef"
+    },
+    "TAB"
+  ]
+]

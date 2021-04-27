@@ -9,6 +9,7 @@ This keymap has a RSTHD-based alpha layer and lots of fun features.
 * Table of Contents :TOC_3:noexport:
 - [[#about][About]]
 - [[#features][Features]]
+  - [[#vim-mode][Vim Mode]]
   - [[#case-modes][Case Modes]]
     - [[#caps-word][Caps Word]]
     - [[#x-case][X-Case]]
@@ -25,6 +26,13 @@ The base alpha layer I use is a modified RSTHD, which has some /interesting/ (pe
 To understand my thought process you can read my [[./logs.org][Keymap Logs]].
 
 * Features
+** Vim Mode
+Vim mode is a pretty self explanatory feature, it's a vim emulator on your keyboard because why not!
+
+Since it's such large feature set to try and implement, it lives in it's own repository, over at [[https://github.com/andrewjrae/qmk-vim][qmk-vim]].
+
+I can toggle vim mode using the ~ldr-t-v~ leader sequence.
+
 ** Case Modes
 Case modes is a feature that implements different case handling modes, [[#caps-word][Caps Word]], and [[#x-case][X-Case]]. See [[./features/casemodes.c][features/casemodes.c]] for implementation details.
 
@@ -66,6 +74,8 @@ It should also not that if you want some thing like SCREAMING_SNAKE_CASE, you ju
 
   If you process at the beginning it will look something like this, make sure that you return false when =process_case_modes= returns false.
   #+begin_src C
+#include "features/casemodes.h"
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // Process case modes
     if (!process_case_modes(keycode, record)) {
@@ -217,6 +227,8 @@ Similar functions would then exist for =leader_open_func= and =leader_toggles_fu
 
   If you process at the beginning it will look something like this, make sure that you return false when =process_leader()= returns false.
   #+begin_src C
+#include "features/leader.h"
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // Process leader key sequences
     if (!process_leader(keycode, record)) {

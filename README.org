@@ -257,7 +257,7 @@ void oled_task_user(void) {
 
  This macro simply prints the current leader sequence on a line of your display. Under the hood it's quite simple and just uses the =leader_display_str()= function but displays it for a little while after it's finished.
  #+begin_src C
-#define OLED_LEADER_DISPLAY()                       \
+#define OLED_LEADER_DISPLAY() {                     \
     static uint16_t timer = 0;                      \
     if (is_leading()) {                             \
         oled_write_ln(leader_display_str(), false); \
@@ -267,6 +267,10 @@ void oled_task_user(void) {
         oled_write_ln(leader_display_str(), false); \
     }                                               \
     else {                                          \
+        // prevent it from ever looping around      \
+        timer = timer_read() - 200;                 \
         oled_write_ln("", false);                   \
-    }
+    }                                               \
+}
+#endif
 #+end_src

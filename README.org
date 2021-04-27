@@ -64,9 +64,27 @@ Finally, because you might want to use this for some more obscure use cases, the
 This function will intercept your next keystroke and use that as it's case delimiter.
 For example, calling =enable_xcase()= and then hitting your ~/~ key will result in your spaces begin turned into slashes. (This is the equivalent of calling =enable_xcase_with(KC_SLSH))=)
 
+To make this a little more flexible, you can define a default separator so that typing non-symbols defaults to that separator.
+This default separator can be configured with the =DEFAULT_XCASE_SEPARATOR= macro, by default it is =KC_UNDS= for snake_case.
+To enable this you need to specify what keys will enter default mode, this configured with the =use_default_xcase_separator()= function.
+
+To just accept alpha-numerics you can use this function in your keymap.c:
+#+begin_src C
+bool use_default_xcase_separator(uint16_t keycode, const keyrecord_t *record) {
+    switch (keycode) {
+        case KC_A ... KC_Z:
+        case KC_1 ... KC_0:
+            return true;
+    }
+    return false;
+}
+#+end_src
+
 Note that =terminate_case_mode()= also determines the stop conditions for x-case, however the spaces (and their new values) will not be passed through the terminate function.
 
-It should also not that if you want some thing like SCREAMING_SNAKE_CASE, you just have to enable caps word and xcase (in either order).
+It should also be noted that if you want some thing like SCREAMING_SNAKE_CASE, you just have to enable caps word and xcase (in either order).
+
+[[https://github.com/mihaiolteanu][@mihaiolteanu]]] also made an elisp implementation for Emacs in this [[https://github.com/andrewjrae/kyria-keymap/issues/1][ticket]] which is super nifty!
 
 *** Configuration / Usage
 + Add [[./features/casemodes.c][features/casemodes.c]] to your ~SRCS~ by calling adding ~SRC += features/casemodes.c~ to your rules.mk.

@@ -43,7 +43,7 @@ char *leader_display_str(void);
         oled_write_ln(leader_display_str(), false); \
     }                                               \
     else {                                          \
-        // prevent it from ever looping around      \
+        /* prevent it from ever looping around */   \
         timer = timer_read() - 200;                 \
         oled_write_ln("", false);                   \
     }                                               \

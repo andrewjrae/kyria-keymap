@@ -93,7 +93,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_RSTHD] = MY_HOMEROW_LAYOUT(
         KC_TAB,   KC_Z,    KC_C, KC_Y, KC_F, KC_P,                                     KC_X, KC_M, KC_QUOT, KC_U,    KC_Q,    KC_PIPE,
 LT(_NAV,KC_SLSH), KC_R,    KC_S, KC_T, KC_H, KC_D,                                     KC_L, KC_N, KC_A,    KC_I,    KC_O,    KC_SCLN,
-        CAPSWRD,  MY_LSFT, KC_V, KC_G, KC_K, KC_B, LEADER,  _______, _______, LEADER,  KC_W, KC_J, KC_COMM, KC_DOT,  MY_RSFT, KC_MINS,
+        CAPSWRD,  MY_LSFT, KC_V, KC_G, KC_K, KC_B, LEADER,  _______, _______, LEADER,  KC_W, KC_J, KC_COMM, KC_DOT,  MY_LSFT, KC_MINS,
                         _______, KC_LGUI, KC_ESC, RST_SPC, RST_ENT, MY_BSPC, RST_E, RST_TAB, KC_RGUI, _______
     ),
 /*

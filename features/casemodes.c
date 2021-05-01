@@ -176,7 +176,7 @@ bool process_case_modes(uint16_t keycode, const keyrecord_t *record) {
             keycode = keycode & 0xFF;
         }
 
-        if (keycode > QK_MODS_MAX || IS_MOD(keycode)) {
+        if (keycode >= QK_LAYER_TAP && keycode <= QK_ONE_SHOT_LAYER_MAX) {
             // let special keys and normal modifiers go through
             return true;
         }

@@ -40,6 +40,7 @@ enum layers {
 enum custom_keycodes {
     CAPSWRD = SAFE_RANGE,
     LEADER,
+    REPEAT,
 };
 
 // clang-format off
@@ -92,8 +93,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #define RST_TAB LT(_FUN, KC_TAB)
     [_RSTHD] = MY_HOMEROW_LAYOUT(
         KC_TAB,   KC_Z,    KC_C, KC_Y, KC_F, KC_P,                                     KC_X, KC_M, KC_QUOT, KC_U,    KC_Q,    KC_PIPE,
-LT(_NAV,KC_SLSH), KC_R,    KC_S, KC_T, KC_H, KC_D,                                     KC_L, KC_N, KC_A,    KC_I,    KC_O,    KC_SCLN,
-        CAPSWRD,  MY_LSFT, KC_V, KC_G, KC_K, KC_B, LEADER,  _______, _______, LEADER,  KC_W, KC_J, KC_COMM, KC_DOT,  MY_LSFT, KC_MINS,
+LT(_NAV,KC_SLSH), KC_R,    KC_S, KC_T, KC_H, KC_D,                                     KC_L, KC_N, KC_A,    KC_I,    KC_O,    KC_DOT,
+        CAPSWRD,  MY_LSFT, KC_V, KC_G, KC_K, KC_B, LEADER,  _______, _______, LEADER,  KC_W, KC_J, KC_COMM, REPEAT,  MY_LSFT, KC_SCLN,
                         _______, KC_LGUI, KC_ESC, RST_SPC, RST_ENT, MY_BSPC, RST_E, RST_TAB, KC_RGUI, _______
     ),
 /*
@@ -223,6 +224,30 @@ LT(_NAV,KC_SLSH), KC_R,    KC_S, KC_T, KC_H, KC_D,                              
 
 /* --------------- PROCESS RECORD --------------- */
 
+// overrideable function to determine whether the case mode should stop
+bool terminate_case_modes(uint16_t keycode, const keyrecord_t *record) {
+        switch (keycode) {
+            // Keycodes to ignore (don't disable caps word)
+            case KC_A ... KC_Z:
+            case KC_1 ... KC_0:
+            case KC_MINS:
+            case KC_UNDS:
+            case REPEAT:
+            case KC_BSPC:
+                // If mod chording disable the mods
+                if (record->event.pressed && (get_mods() != 0)) {
+                    return true;
+                }
+                break;
+            default:
+                if (record->event.pressed) {
+                    return true;
+                }
+                break;
+        }
+        return false;
+}
+
 bool use_default_xcase_separator(uint16_t keycode, const keyrecord_t *record) {
     switch (keycode) {
         case KC_A ... KC_Z:
@@ -232,6 +257,7 @@ bool use_default_xcase_separator(uint16_t keycode, const keyrecord_t *record) {
     return false;
 }
 
+uint16_t repeat_key;
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // Process case modes
     if (!process_case_modes(keycode, record)) {
@@ -262,6 +288,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 start_leading();
             }
             return false;
+        case REPEAT:
+            if (record->event.pressed) {
+                tap_code16(repeat_key);
+            }
+            return false;
         case KC_MINS:
             // Turn the cheeky corner minus sign into an underscore when using caps word
             if (caps_word_enabled() && record->event.pressed && record->event.key.col == MATRIX_COLS-1) {
@@ -282,6 +313,8 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
             }
             return true;
         default:
+            if (record->event.pressed && keycode != MY_BSPC)
+                repeat_key = keycode;
             return true;  // Process all other keycodes normally
     }
 }

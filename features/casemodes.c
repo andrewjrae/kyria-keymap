@@ -249,7 +249,7 @@ bool process_case_modes(uint16_t keycode, const keyrecord_t *record) {
             }
 
 #ifdef CAPSWORD_USE_SHIFT
-            else if (keycode >= KC_A && keycode <= KC_Z){
+            else if (caps_word_on && keycode >= KC_A && keycode <= KC_Z){
                 tap_code16(LSFT(keycode));
                 return false;
             }

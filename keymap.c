@@ -388,6 +388,14 @@ bool process_insert_mode_user(uint16_t keycode, const keyrecord_t *record) {
     }
     return true;
 }
+
+bool process_visual_line_mode_user(uint16_t keycode, const keyrecord_t *record) {
+    if (record->event.pressed && ((keycode & 0xFF) == KC_TAB)) {
+        tap_code16(keycode);
+        return false;
+    }
+    return true;
+}
 #endif
 
 #ifdef OLED_DRIVER_ENABLE

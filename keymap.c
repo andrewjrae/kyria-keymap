@@ -31,6 +31,7 @@
 enum layers {
     _RSTHD = 0,
     _QWERTY,
+    _GAMING,
     _NUM,
     _SYM,
     _NAV,
@@ -115,6 +116,26 @@ LT(_NAV,KC_SLSH), KC_R,    KC_S, KC_T, KC_H, KC_D,                              
         KC_A,   KC_S,   KC_D,   KC_F,   KC_G,           KC_H,   KC_J,   KC_K,    KC_L,   KC_SCLN, KC_QUOT,
         KC_Z,   KC_X,   KC_C,   KC_V,   KC_B,           KC_N,   KC_M,   KC_COMM, KC_DOT, KC_SLSH,
         MY_LSFT
+    ),
+/*
+ * Alpha Layer: GAMING
+ *
+ * ,-------------------------------------------.                              ,-------------------------------------------.
+ * |  Esc   |   Z  |   Q  |   W  |   E  |   R  |                              |   Y  |   U  |   I  |   O  |   P  |  | \   |
+ * |--------+------+------+------+------+------|                              |------+------+------+------+------+--------|
+ * |  Tab   |Shift |   A  |   S  |   D  |   F  |                              |   H  |   J  |   K  |   L  | ;  : |  ' "   |
+ * |--------+------+------+------+------+------+-------------.  ,-------------+------+------+------+------+------+--------|
+ * | LShift | CTRL |   Z  |   X  |   C  |   V  |Leader|      |  |      |Leader|   N  |   M  | ,  < | . >  | /  ? | RShift |
+ * `----------------------+------+------+------+------+ Enter|  | Bksp +------+------+------+------+----------------------'
+ *                        | ???  | GUI  |   X  | SPC  | SYM  |  | NUM  | Space| Tab  | GUI  | ???  |
+ *                        |      |      |      |      |      |  |      | NAV  | Ctrl |      |      |
+ *                        `----------------------------------'  `----------------------------------'
+ */
+    [_GAMING] = LAYOUT(
+      KC_ESC,   KC_Z,   KC_Q,   KC_W,     KC_E,     KC_R,                                             KC_Y,   KC_U,   KC_I,    KC_O,   KC_P,      KC_PIPE,
+      KC_TAB,   KC_LSFT,   KC_A,   KC_S,     KC_D,     KC_F,                                          KC_H,   KC_J,   KC_K,    KC_L,   KC_SCLN,   KC_QUOT,
+      KC_LCTL,  KC_LCTL,   KC_Z,   KC_X,     KC_X,     KC_C,     LEADER,  _______, _______, LEADER,   KC_N,   KC_M,   KC_COMM, KC_DOT, KC_SLSH,   KC_MINS,
+                              _______, KC_LGUI, KC_Z, KC_SPC,   KC_ENT,  MY_BSPC, MY_SPC,   MY_RCTL, KC_RGUI, _______
     ),
 /*
  * Number Layer: Numbers and function keys
@@ -341,6 +362,9 @@ void *leader_layers_func(uint16_t keycode) {
         case KC_Q:
             layer_move(_QWERTY);
             break;
+        case KC_G:
+            layer_move(_GAMING);
+            break;
         default:
             break;
     }
@@ -561,6 +585,9 @@ static void render_status(void) {
             break;
         case _QWERTY:
             oled_write_P(PSTR("QWERTY"), false);
+            break;
+        case _GAMING:
+            oled_write_P(PSTR("GAMING"), false);
             break;
         case _NAV:
             oled_write_P(PSTR("Navigation"), false);

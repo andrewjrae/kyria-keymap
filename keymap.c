@@ -93,8 +93,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 #define RST_TAB LT(_FUN, KC_TAB)
     [_RSTHD] = MY_HOMEROW_LAYOUT(
         KC_TAB,   KC_Z,    KC_C, KC_Y, KC_F, KC_P,                                     KC_X, KC_M, KC_QUOT, KC_U,    KC_Q,    KC_PIPE,
-LT(_NAV,KC_SLSH), KC_R,    KC_S, KC_T, KC_H, KC_D,                                     KC_L, KC_N, KC_A,    KC_I,    KC_O,    KC_SCLN,
-        CAPSWRD,  MY_LSFT, KC_V, KC_G, KC_K, KC_B, LEADER,  _______, _______, LEADER,  KC_W, KC_J, KC_COMM, KC_DOT,  MY_LSFT, KC_MINS,
+        KC_SLSH,  KC_R,    KC_S, KC_T, KC_H, KC_D,                                     KC_L, KC_N, KC_A,    KC_I,    KC_O,    KC_SCLN,
+        _______,  MY_LSFT, KC_V, KC_G, KC_K, KC_B, LEADER,  _______, _______, LEADER,  KC_W, KC_J, KC_COMM, KC_DOT,  MY_LSFT, KC_MINS,
                         _______, KC_LGUI, KC_ESC, RST_SPC, RST_ENT, MY_BSPC, RST_E, RST_TAB, KC_RGUI, _______
     ),
 /*
@@ -314,18 +314,30 @@ enum combo_events {
   XL_COMBO,
   LEFT_LEAD,
   RIGHT_LEAD,
+  YF_COMBO,
+  GK_COMBO,
+  JCOMM_COMBO,
+  THSPC_COMBO,
 };
 
 const uint16_t PROGMEM pd_combo[] = {KC_P, KC_D, COMBO_END};
 const uint16_t PROGMEM xl_combo[] = {KC_X, KC_L, COMBO_END};
-/* const uint16_t PROGMEM left_thumb_combo[] = {RST_E, LEADER,  COMBO_END}; */
-/* const uint16_t PROGMEM right_thumb_combo[] = {RST_SPC, LEADER,  COMBO_END}; */
+const uint16_t PROGMEM left_thumb_combo[] = {RST_E, LEADER,  COMBO_END};
+const uint16_t PROGMEM right_thumb_combo[] = {RST_SPC, LEADER,  COMBO_END};
+const uint16_t PROGMEM yf_combo[] = {KC_Y, KC_F,  COMBO_END};
+const uint16_t PROGMEM gk_combo[] = {KC_G, KC_K,  COMBO_END};
+const uint16_t PROGMEM jcomma_combo[] = {KC_J, KC_COMM,  COMBO_END};
+const uint16_t PROGMEM thspc_combo[] = {LCTL_T(KC_T), LSFT_T(KC_H), RST_SPC, COMBO_END};
 
 combo_t key_combos[COMBO_COUNT] = {
   [ PD_COMBO ] = COMBO_ACTION(pd_combo),
   [ XL_COMBO ] = COMBO_ACTION(xl_combo),
-  /* [ LEFT_LEAD ] = COMBO_ACTION(left_thumb_combo), */
-  /* [ RIGHT_LEAD ] = COMBO_ACTION(right_thumb_combo), */
+  [ LEFT_LEAD ] = COMBO_ACTION(left_thumb_combo),
+  [ RIGHT_LEAD ] = COMBO_ACTION(right_thumb_combo),
+  [ YF_COMBO ] = COMBO_ACTION(yf_combo),
+  [ GK_COMBO ] = COMBO_ACTION(gk_combo),
+  [ JCOMM_COMBO ] = COMBO_ACTION(jcomma_combo),
+  [ THSPC_COMBO ] = COMBO_ACTION(thspc_combo),
 };
 
 void process_combo_event(uint16_t combo_index, bool pressed) {
@@ -342,10 +354,22 @@ void process_combo_event(uint16_t combo_index, bool pressed) {
                 start_leading();
             }
             break;
+        case YF_COMBO:
         case XL_COMBO:
             if (pressed) {
-                /* enable_caps_word(); // toggle caps word */
                 enable_xcase();
+            }
+            break;
+        case GK_COMBO:
+        case JCOMM_COMBO:
+            if (pressed) {
+                toggle_caps_word();
+            }
+            break;
+        case THSPC_COMBO:
+            if (pressed) {
+                tap_code(KC_MINS);
+                tap_code16(KC_RABK);
             }
             break;
     }
@@ -422,7 +446,7 @@ bool process_visual_line_mode_user(uint16_t keycode, const keyrecord_t *record) 
 }
 #endif
 
-#ifdef OLED_DRIVER_ENABLE
+#ifdef OLED_ENABLE
 oled_rotation_t oled_init_user(oled_rotation_t rotation) {
     return OLED_ROTATION_180;
 }

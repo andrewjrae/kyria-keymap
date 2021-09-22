@@ -58,8 +58,8 @@
 #define VIM_NUMBERED_JUMPS
 
 // Combo settings
-#define COMBO_COUNT 4
-#define COMBO_TERM 100
+#define COMBO_COUNT 8
+#define COMBO_TERM 60
 
 // Tapping settings
 #define TAPPING_TERM 200

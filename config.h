@@ -56,9 +56,10 @@
 #define VIM_DOT_REPEAT
 #define VIM_W_BEGINNING_OF_WORD
 #define VIM_NUMBERED_JUMPS
+#define ONESHOT_VIM
 
 // Combo settings
-#define COMBO_COUNT 8
+#define COMBO_COUNT 9
 #define COMBO_TERM 60
 
 // Tapping settings
@@ -80,6 +81,9 @@
 #define MY_RSFT OSM(MOD_RSFT)
 #define MY_RCTL MT(MOD_RCTL, KC_TAB)
 #define MY_LALT MT(MOD_LALT, KC_ESC)
+
+#define MY_COPY LCTL(KC_INSERT)
+#define MY_PASTE LSFT(KC_INSERT)
 
 // Define some simple vi keys
 #define VI_B   LCTL(KC_LEFT)

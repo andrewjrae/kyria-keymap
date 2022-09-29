@@ -38,6 +38,10 @@
 #define DEFAULT_XCASE_SEPARATOR KC_UNDS
 #endif
 
+#ifndef DEFAULT_DELIMITERS_TERMINATE_COUNT
+#define DEFAULT_DELIMITERS_TERMINATE_COUNT 2
+#endif
+
 #define IS_OSM(keycode) (keycode >= QK_ONE_SHOT_MOD && keycode <= QK_ONE_SHOT_MOD_MAX)
 
 // bool to keep track of the caps word state
@@ -49,6 +53,8 @@ static enum xcase_state xcase_state = XCASE_OFF;
 static uint16_t xcase_delimiter;
 // the number of keys to the last delimiter
 static int8_t distance_to_last_delim = -1;
+// the number of delimiters in a row
+static int8_t delimiters_count = 0;
 
 // Check whether caps word is on
 bool caps_word_enabled(void) {
@@ -102,6 +108,7 @@ void enable_xcase_with(uint16_t delimiter) {
     xcase_state = XCASE_ON;
     xcase_delimiter = delimiter;
     distance_to_last_delim = -1;
+    delimiters_count = 0;
 }
 
 // Disable xcase
@@ -125,7 +132,9 @@ static void remove_delimiter(void) {
     if (IS_OSM(xcase_delimiter)) {
         clear_oneshot_mods();
     } else {
-        tap_code(KC_BSPC);
+        for (int8_t i = 0; i < DEFAULT_DELIMITERS_TERMINATE_COUNT - 1; i++) {
+            tap_code(KC_BSPC);
+        }
     }
 }
 
@@ -214,11 +223,13 @@ bool process_case_modes(uint16_t keycode, const keyrecord_t *record) {
             if (xcase_state == XCASE_ON) {
                 // place the delimiter if space is tapped
                 if (keycode == KC_SPACE) {
-                    if (distance_to_last_delim != 0) {
+                    delimiters_count++;
+                    if (delimiters_count < DEFAULT_DELIMITERS_TERMINATE_COUNT) {
                         place_delimiter();
                         distance_to_last_delim = 0;
                         return false;
                     }
+
                     // remove the delimiter and disable modes
                     else {
                         remove_delimiter();
@@ -230,6 +241,9 @@ bool process_case_modes(uint16_t keycode, const keyrecord_t *record) {
                 // decrement distance to delimiter on back space
                 else if (keycode == KC_BSPC) {
                     --distance_to_last_delim;
+                    if (delimiters_count > 0) {
+                        --delimiters_count;
+                    }
                 }
                 // don't increment distance to last delim if negative
                 else if (distance_to_last_delim >= 0) {
@@ -238,6 +252,7 @@ bool process_case_modes(uint16_t keycode, const keyrecord_t *record) {
                         place_delimiter();
                     }
                     ++distance_to_last_delim;
+                    delimiters_count = 0;
                 }
 
             } // end XCASE_ON
